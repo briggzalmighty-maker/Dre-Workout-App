@@ -119,13 +119,14 @@ h1 span{background:linear-gradient(90deg,var(--lift),var(--gold));-webkit-backgr
 
 /* ---------- Tab bar (liquid glass) ---------- */
 nav.tabs{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom));left:12px;right:12px;z-index:50;border-radius:24px;padding:6px}
-.tabrow{display:flex;gap:2px;max-width:616px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+.tabrow{display:flex;gap:1px;max-width:616px;margin:0 auto}
 .tabrow::-webkit-scrollbar{display:none}
 .tabbtn{
-  flex:1 0 auto;min-width:52px;min-height:50px;border:none;background:transparent;color:var(--muted);
-  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11.5px;
-  text-transform:uppercase;letter-spacing:.04em;border-radius:18px;cursor:pointer;
+  flex:1 1 0;min-width:0;min-height:50px;padding:0 1px;border:none;background:transparent;color:var(--muted);
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10.5px;
+  text-transform:uppercase;letter-spacing:.02em;border-radius:16px;cursor:pointer;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  white-space:nowrap;overflow:hidden;
   transition:background .18s,color .18s,transform .12s;
 }
 .tabbtn:active{transform:scale(.93)}
@@ -533,8 +534,8 @@ textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,2
     <button class="tabbtn t-diet" data-p="diet"><span class="ico">🥩</span>Diet</button>
     <button class="tabbtn t-pr" data-p="pr"><span class="ico">🏆</span>PRs</button>
     <button class="tabbtn t-log" data-p="log"><span class="ico">✅</span>Log</button>
-    <button class="tabbtn t-money" data-p="money"><span class="ico">💰</span>Money</button>
     <button class="tabbtn t-prog" data-p="prog"><span class="ico">📉</span>Weight</button>
+    <button class="tabbtn t-money" data-p="money"><span class="ico">💰</span>Money</button>
   </div>
 </nav>
 
