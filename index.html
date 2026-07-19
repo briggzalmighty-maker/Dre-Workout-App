@@ -96,7 +96,8 @@ h1 span{background:linear-gradient(90deg,var(--lift),var(--gold));-webkit-backgr
 .goalbar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center;justify-content:center}
 .goalchip{font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:6px 11px;border-radius:999px;color:var(--muted)}
 .goalchip b{color:var(--text);font-weight:700}
-.syncstatus{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.syncstatus{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:5px;cursor:pointer;padding:6px 10px;border-radius:999px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);min-height:28px}
+.syncstatus:active{background:rgba(255,255,255,.12)}
 .syncstatus .dot{width:6px;height:6px;border-radius:50%;background:var(--muted);transition:background .3s}
 .syncstatus.ok .dot{background:var(--core)} .syncstatus.err .dot{background:var(--danger)}
 .syncstatus.ok{color:var(--core)} .syncstatus.err{color:var(--danger)}
@@ -118,9 +119,10 @@ h1 span{background:linear-gradient(90deg,var(--lift),var(--gold));-webkit-backgr
 
 /* ---------- Tab bar (liquid glass) ---------- */
 nav.tabs{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom));left:12px;right:12px;z-index:50;border-radius:24px;padding:6px}
-.tabrow{display:flex;gap:2px;max-width:616px;margin:0 auto}
+.tabrow{display:flex;gap:2px;max-width:616px;margin:0 auto;overflow-x:auto;scrollbar-width:none}
+.tabrow::-webkit-scrollbar{display:none}
 .tabbtn{
-  flex:1;min-height:50px;border:none;background:transparent;color:var(--muted);
+  flex:1 0 auto;min-width:52px;min-height:50px;border:none;background:transparent;color:var(--muted);
   font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11.5px;
   text-transform:uppercase;letter-spacing:.04em;border-radius:18px;cursor:pointer;
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
@@ -132,6 +134,7 @@ nav.tabs{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom));left:12p
 .tabbtn.active.t-sched{color:var(--cardio)} .tabbtn.active.t-ex{color:var(--lift)}
 .tabbtn.active.t-diet{color:var(--core)} .tabbtn.active.t-pr{color:var(--gold)}
 .tabbtn.active.t-log{color:var(--pink)} .tabbtn.active.t-prog{color:var(--violet)}
+.tabbtn.active.t-money{color:#7DF9C6}
 
 .panel{display:none;padding-top:16px;animation:fade .18s ease}
 .panel.active{display:block}
@@ -260,6 +263,29 @@ textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,2
 .logrow .del{background:none;border:none;color:var(--danger);cursor:pointer;font-size:13px;padding:10px;min-width:40px;min-height:40px}
 #chart{width:100%;height:150px;margin-top:14px}
 .empty{color:var(--muted);font-size:13.5px;text-align:center;padding:20px 0;line-height:1.5}
+
+/* ---------- Money tab ---------- */
+.mrow{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;min-height:46px}
+.mrow:last-child{border-bottom:none}
+.mrow .mn{flex:1;min-width:0}
+.mrow .mv{font-family:'JetBrains Mono',monospace;font-weight:500;white-space:nowrap}
+.mrow .mdel{background:none;border:none;color:var(--danger);cursor:pointer;font-size:13px;padding:8px;min-width:36px;min-height:36px}
+.mrow[data-edit-s]{cursor:pointer}
+.mrow[data-edit-s]:active{background:rgba(255,255,255,.04);border-radius:10px}
+.micon{width:26px;text-align:center;flex-shrink:0;font-size:16px}
+.medit{gap:6px}
+.medit input{min-height:44px;padding:8px 10px;border-radius:10px}
+.medit .me-n{flex:1;min-width:0;font-family:'Barlow',sans-serif;text-align:left}
+.medit .me-a{width:86px;text-align:right}
+.msave{background:var(--core);color:#06170C;border:none;border-radius:10px;min-width:44px;min-height:44px;font-size:16px;font-weight:800;cursor:pointer;flex-shrink:0}
+.mtotal{display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed rgba(255,255,255,.15);font-size:13px;color:var(--muted)}
+.mtotal b{font-family:'JetBrains Mono',monospace;font-size:16px;color:var(--text)}
+.maddrow{display:flex;gap:8px;margin-top:12px}
+.maddrow input[type=text]{flex:1;font-family:'Barlow',sans-serif;text-align:left}
+.maddrow input[type=number]{width:92px}
+.maddrow button{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);color:var(--text);border-radius:12px;min-height:48px;min-width:52px;font-size:20px;cursor:pointer}
+.msummary{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.msummary .macro .v{color:#7DF9C6}
 
 /* ---------- Edit mode ---------- */
 .editbar{display:flex;justify-content:flex-end;margin-bottom:10px}
@@ -453,6 +479,31 @@ textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,2
     <div id="loghistory"></div>
   </section>
 
+  <!-- MONEY -->
+  <section id="panel-money" class="panel">
+    <div class="sec" style="color:#7DF9C6">Monthly picture</div>
+    <div class="card glass">
+      <div class="msummary macrogrid" style="margin-top:0">
+        <div class="macro"><div class="v" id="moOut">—</div><div class="l">Out / month</div></div>
+        <div class="macro"><div class="v" id="moYr">—</div><div class="l">Yearly ÷ 12</div></div>
+      </div>
+    </div>
+    <div id="moneySections"></div>
+
+    <div class="sec" style="color:#7DF9C6">Investment plan</div>
+    <div class="card glass">
+      <div class="mealrow"><b>Step 0 — Credit card never revolves</b>The $1,400 balance gets paid to zero every statement, before any investing. Card interest (~22–29% APR if it revolves) beats any market return — in the wrong direction. <span>· If it's already paid in full monthly, you're doing this.</span></div>
+      <div class="mealrow"><b>Step 1 — 401k up to the match only</b>Your $19k keeps growing. Contribute whatever % your employer matches — that's an instant 50–100% return. Above the match, hold, because of Step 2. <span>· Free money first, always.</span></div>
+      <div class="mealrow"><b>Step 2 — Attack the personal loan</b>$24k at $1,200/mo is your biggest monthly line after rent. Every extra dollar here is a guaranteed return at the loan's rate. Any spare cash beyond the match goes here until it's gone. <span>· Guaranteed beats hoped-for.</span></div>
+      <div class="mealrow"><b>Step 3 — Emergency fund</b>1 month of expenses minimum while the loan exists, 3–6 months after it's dead. High-yield savings, not invested. <span>· Prevents new debt when life happens.</span></div>
+      <div class="mealrow"><b>Step 4 — Then real investing</b>After the loan: redirect that $1,200/mo. Max Roth IRA first ($7k/yr) in a broad index fund (VOO / VTI / VT), then raise 401k contributions. <span>· The loan payment becomes your wealth engine.</span></div>
+      <div class="mealrow"><b>The Apple $4/day</b>Keep it if it keeps you in the habit — but it's one company, not a plan. Long-term, index funds should be the base and single stocks the garnish. <span>· ~$122/mo · concentration is the risk, not Apple itself.</span></div>
+    </div>
+    <div class="note glass" style="border-color:#7DF9C6"><b>Not financial advice</b> — I'm not a financial advisor and I don't know your loan APR or income. The ordering above (match → high-interest debt → emergency fund → index funds) is the standard framework; plug in your actual rates to confirm. If the personal loan is under ~5% APR, investing alongside it becomes defensible.</div>
+
+    <div class="note glass" style="border-color:#7DF9C6"><b>Yearly items are divided by 12</b> in the monthly total so an annual charge doesn't hide for 11 months then blow up the 12th. Investments count as cash leaving checking.</div>
+  </section>
+
   <!-- PROGRESS -->
   <section id="panel-prog" class="panel">
     <div class="sec c-violet">Weight tracker</div>
@@ -482,6 +533,7 @@ textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,2
     <button class="tabbtn t-diet" data-p="diet"><span class="ico">🥩</span>Diet</button>
     <button class="tabbtn t-pr" data-p="pr"><span class="ico">🏆</span>PRs</button>
     <button class="tabbtn t-log" data-p="log"><span class="ico">✅</span>Log</button>
+    <button class="tabbtn t-money" data-p="money"><span class="ico">💰</span>Money</button>
     <button class="tabbtn t-prog" data-p="prog"><span class="ico">📉</span>Weight</button>
   </div>
 </nav>
@@ -560,39 +612,121 @@ function setSync(mode,text){
   el.className='syncstatus'+(mode?' '+mode:'');
   document.getElementById('syncText').textContent=text;
 }
-/* Storage backend: prefer Claude's window.storage (artifact runtime),
-   fall back to localStorage (works on Vercel / any host / offline). */
+/* ============ STORAGE: local cache + cloud sync (Vercel Blob via /api/state) ============
+   - localStorage: always written; app works fully offline / device-only.
+   - window.storage: written when present (Claude artifact runtime).
+   - Cloud: if a sync passcode is set, state pushes to /api/state and pulls on load.
+     Passcode never leaves the device; only its SHA-256 hash is sent as the key.
+   - Conflict rule: newest _ts wins. */
 const LS_KEY='dre-mays-app-state';
+const LS_CODE='dre-mays-sync-hash';
 const HAS_WS=(()=>{try{return !!(window.storage&&window.storage.get&&window.storage.set);}catch(e){return false;}})();
+let SYNC_HASH=null;
+try{SYNC_HASH=localStorage.getItem(LS_CODE)||null;}catch(e){}
+
+async function sha256Hex(str){
+  const buf=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(str));
+  return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+function readLocal(){
+  try{const raw=localStorage.getItem(LS_KEY);if(raw)return JSON.parse(raw);}catch(e){}
+  return null;
+}
+function writeLocal(json){try{localStorage.setItem(LS_KEY,json);return true;}catch(e){return false;}}
+
+async function cloudPull(){
+  if(!SYNC_HASH)return null;
+  try{
+    const r=await fetch('/api/state?k='+SYNC_HASH,{cache:'no-store'});
+    if(r.status===404)return null;          /* nothing in cloud yet */
+    if(!r.ok)throw new Error('pull '+r.status);
+    const j=await r.json();
+    return j.state||null;
+  }catch(e){throw e;}
+}
+async function cloudPush(json){
+  if(!SYNC_HASH)return false;
+  const r=await fetch('/api/state',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({k:SYNC_HASH,state:JSON.parse(json)})
+  });
+  if(!r.ok)throw new Error('push '+r.status);
+  return true;
+}
 
 async function loadState(){
-  // Try window.storage first
+  // 1) local sources
+  let local=null;
   if(HAS_WS){
-    try{
-      const res=await window.storage.get('app-state',false);
-      if(res&&res.value){STATE=Object.assign({},DEFAULT_STATE,JSON.parse(res.value));setSync('ok','Synced');return;}
-    }catch(e){/* fall through to localStorage */}
+    try{const res=await window.storage.get('app-state',false);if(res&&res.value)local=JSON.parse(res.value);}catch(e){}
   }
-  // localStorage fallback / migration source
-  try{
-    const raw=localStorage.getItem(LS_KEY);
-    if(raw){STATE=Object.assign({},DEFAULT_STATE,JSON.parse(raw));setSync('ok','Saved on device');return;}
-  }catch(e){}
-  setSync(HAS_WS?'ok':'ok','New — nothing saved yet');
+  if(!local)local=readLocal();
+  // 2) cloud, if passcode set — newest timestamp wins
+  let cloud=null,cloudErr=false;
+  if(SYNC_HASH){
+    try{cloud=await cloudPull();}catch(e){cloudErr=true;}
+  }
+  const pick=(a,b)=>{
+    if(a&&b)return (b._ts||0)>(a._ts||0)?b:a;
+    return a||b||null;
+  };
+  const chosen=pick(local,cloud);
+  if(chosen)STATE=Object.assign({},DEFAULT_STATE,chosen);
+  if(SYNC_HASH){
+    if(cloudErr)setSync('err','Cloud unreachable — saved on device');
+    else{
+      setSync('ok','Cloud synced · tap to change');
+      /* if local was newer than cloud, push it up now */
+      if(local&&(!cloud||(local._ts||0)>(cloud._ts||0))){
+        try{await cloudPush(JSON.stringify(STATE));}catch(e){}
+      }
+    }
+  }else{
+    setSync('ok',chosen?'On device · tap to sync':'Tap to set up sync');
+  }
 }
 async function persist(){
   setSync('','Saving…');
-  let ok=false;
+  STATE._ts=Date.now();
   const json=JSON.stringify(STATE);
-  // Always write localStorage so data survives on any host
-  try{localStorage.setItem(LS_KEY,json);ok=true;}catch(e){}
-  // Also write window.storage when available
-  if(HAS_WS){
-    try{const r=await window.storage.set('app-state',json,false);if(r)ok=true;}catch(e){}
+  let localOk=writeLocal(json);
+  if(HAS_WS){try{const r=await window.storage.set('app-state',json,false);if(r)localOk=true;}catch(e){}}
+  if(SYNC_HASH){
+    try{await cloudPush(json);setSync('ok','Cloud synced · tap to change');}
+    catch(e){setSync(localOk?'err':'err',localOk?'Cloud failed — saved on device':'Save failed');}
+  }else{
+    setSync(localOk?'ok':'err',localOk?'On device · tap to sync':'Save failed');
   }
-  setSync(ok?'ok':'err',ok?(HAS_WS?'Synced':'Saved on device'):'Save failed');
 }
 function persistDebounced(){clearTimeout(saveTimer);saveTimer=setTimeout(persist,400);}
+
+/* Sync setup: tap the status chip to set / change / clear the passcode */
+document.getElementById('syncStatus').addEventListener('click',async()=>{
+  const cur=SYNC_HASH?'A sync passcode is set.\n\nEnter a new passcode to switch, or type OFF to stop syncing:':'Create a sync passcode.\n\nType the SAME passcode on any device to see the same data. Longer is safer:';
+  const input=prompt(cur);
+  if(input==null)return;
+  const v=input.trim();
+  if(!v)return;
+  if(v.toUpperCase()==='OFF'){
+    SYNC_HASH=null;
+    try{localStorage.removeItem(LS_CODE);}catch(e){}
+    setSync('ok','On device · tap to sync');
+    return;
+  }
+  if(v.length<6){alert('Use at least 6 characters — this passcode is the only thing protecting your data.');return;}
+  try{
+    SYNC_HASH=await sha256Hex(v);
+    try{localStorage.setItem(LS_CODE,SYNC_HASH);}catch(e){}
+    setSync('','Connecting…');
+    const cloud=await cloudPull().catch(()=>null);
+    if(cloud&&(cloud._ts||0)>(STATE._ts||0)){
+      STATE=Object.assign({},DEFAULT_STATE,cloud);
+      location.reload();                     /* simplest way to repaint everything from cloud state */
+      return;
+    }
+    await persist();
+  }catch(e){setSync('err','Sync setup failed');}
+});
 
 /* ============ LIQUID GLASS: enable real refraction only where supported ============ */
 if(window.CSS&&CSS.supports&&CSS.supports('backdrop-filter','url(#lgFilter)')){
@@ -944,6 +1078,131 @@ function renderLogHistory(){
   }));
 }
 
+/* ============ MONEY TAB ============ */
+const MONEY_SEED={
+  fixed:[
+    {n:'Rent',a:1700},{n:'Wi-Fi',a:120},{n:'Phone',a:120},{n:'Electric',a:65},
+    {n:'Heat / Water',a:80},{n:'Car payment',a:700},{n:'Car insurance (2 cars)',a:220},
+    {n:'Personal loan ($24k total)',a:1200},{n:'Credit card (varies $500\u2013$1,000)',a:750}
+  ],
+  invest:[
+    {n:'Apple \u2014 $4/day',a:122}
+  ],
+  yearly:[],
+  subs:[
+    {n:'AppleCare',a:14},{n:'Crunchyroll',a:14},{n:'iCloud',a:1},
+    {n:'YouTube Premium',a:21},{n:'Joe Budden Patreon',a:25},{n:'Apple Music',a:12},{n:'LA Fitness',a:40}
+  ]
+}
+const MONEY_SECTIONS=[
+  ['fixed','Fixed Costs','var(--lift)','/mo','\ud83c\udfe0'],
+  ['invest','Investments','var(--core)','/mo','\ud83d\udcc8'],
+  ['yearly','Yearly Recurring','var(--cardio)','/yr','\ud83d\uddd3'],
+  ['subs','Subscriptions','var(--violet)','/mo','\ud83d\udd01']
+];
+const MONEY_ICONS=[
+  [/rent|apartment|mortgage/i,'\ud83c\udfe0'],[/wi.?fi|internet/i,'\ud83d\udcf6'],
+  [/phone|mobile|t.?mobile|verizon/i,'\ud83d\udcf1'],[/electric|power/i,'\u26a1'],
+  [/heat|water|utilit/i,'\ud83d\udca7'],[/insurance/i,'\ud83d\udee1\ufe0f'],
+  [/car|auto|vehicle/i,'\ud83d\ude97'],[/loan|debt/i,'\ud83c\udfe6'],
+  [/credit/i,'\ud83d\udcb3'],[/apple ?music|music|spotify/i,'\ud83c\udfb5'],
+  [/applecare|apple/i,'\ud83c\udf4e'],[/youtube/i,'\u25b6\ufe0f'],
+  [/patreon|podcast|budden/i,'\ud83c\udf99\ufe0f'],[/icloud|cloud|storage/i,'\u2601\ufe0f'],
+  [/crunchyroll|anime|netflix|hulu|stream/i,'\ud83c\udfac'],
+  [/fitness|gym|la fitness/i,'\ud83d\udcaa'],[/invest|robinhood|roth|vanguard|stock|index|vo{2}|vti/i,'\ud83d\udcc8'],
+  [/gas|fuel/i,'\u26fd'],[/grocer|food/i,'\ud83d\uded2'],[/vpn|security/i,'\ud83d\udd12']
+];
+function moneyIcon(name){
+  for(const [re,ic] of MONEY_ICONS)if(re.test(name))return ic;
+  return '\ud83d\udcb5';
+}
+function moneyData(){
+  if(!STATE.money)STATE.money=JSON.parse(JSON.stringify(MONEY_SEED));
+  return STATE.money;
+}
+const fmt$=v=>'$'+(Math.round(v*100)/100).toLocaleString('en-US',{minimumFractionDigits:v%1?2:0,maximumFractionDigits:2});
+let moneyEdit=null; /* {s:key,i:index} row currently in edit mode */
+
+function renderMoney(){
+  const m=moneyData();
+  const host=document.getElementById('moneySections');
+  host.innerHTML=MONEY_SECTIONS.map(([key,label,color,unit,secIcon])=>{
+    const items=m[key]||[];
+    const total=items.reduce((s,it)=>s+(+it.a||0),0);
+    return '<div class="sec" style="color:'+color+'">'+secIcon+' '+label+'</div>'
+      +'<div class="card glass">'
+      +(items.length?items.map((it,i)=>{
+        const editing=moneyEdit&&moneyEdit.s===key&&moneyEdit.i===i;
+        if(editing){
+          return '<div class="mrow medit">'
+            +'<span class="micon">'+moneyIcon(it.n)+'</span>'
+            +'<input type="text" class="me-n" value="'+esc(it.n)+'" maxlength="40">'
+            +'<input type="number" class="me-a" inputmode="decimal" value="'+esc(it.a)+'">'
+            +'<button class="msave" data-s="'+key+'" data-i="'+i+'" aria-label="Save">\u2713</button>'
+            +'</div>';
+        }
+        return '<div class="mrow" data-edit-s="'+key+'" data-edit-i="'+i+'">'
+          +'<span class="micon">'+moneyIcon(it.n)+'</span>'
+          +'<span class="mn">'+esc(it.n)+'</span>'
+          +'<span class="mv">'+fmt$(+it.a||0)+'</span>'
+          +'<button class="mdel" data-s="'+key+'" data-i="'+i+'" aria-label="Delete">\u2715</button></div>';
+       }).join(''):'<div class="empty">Nothing here yet.</div>')
+      +'<div class="mtotal"><span>Total</span><b>'+fmt$(total)+unit+'</b></div>'
+      +'<div class="maddrow">'
+        +'<input type="text" id="mn-'+key+'" placeholder="Name" maxlength="40">'
+        +'<input type="number" id="ma-'+key+'" inputmode="decimal" placeholder="$">'
+        +'<button data-add="'+key+'" aria-label="Add">+</button>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+  const t=k=>(m[k]||[]).reduce((s,it)=>s+(+it.a||0),0);
+  const yrMo=t('yearly')/12;
+  document.getElementById('moOut').textContent=fmt$(t('fixed')+t('subs')+t('invest')+yrMo);
+  document.getElementById('moYr').textContent=fmt$(yrMo)+'/mo';
+
+  /* delete */
+  host.querySelectorAll('.mdel').forEach(b=>b.addEventListener('click',e=>{
+    e.stopPropagation();
+    moneyData()[b.dataset.s].splice(parseInt(b.dataset.i,10),1);
+    moneyEdit=null;persistDebounced();renderMoney();
+  }));
+  /* tap row -> edit mode */
+  host.querySelectorAll('.mrow[data-edit-s]').forEach(r=>r.addEventListener('click',()=>{
+    moneyEdit={s:r.dataset.editS,i:parseInt(r.dataset.editI,10)};
+    renderMoney();
+    const inp=host.querySelector('.medit .me-a');
+    if(inp)inp.focus();
+  }));
+  /* save edit */
+  const commitEdit=(row,key,i)=>{
+    const n=row.querySelector('.me-n').value.trim();
+    const a=parseFloat(row.querySelector('.me-a').value);
+    if(n&&!isNaN(a)&&a>=0){moneyData()[key][i]={n:n,a:a};persistDebounced();}
+    moneyEdit=null;renderMoney();
+  };
+  host.querySelectorAll('.msave').forEach(b=>b.addEventListener('click',e=>{
+    e.stopPropagation();
+    commitEdit(b.closest('.medit'),b.dataset.s,parseInt(b.dataset.i,10));
+  }));
+  host.querySelectorAll('.medit input').forEach(inp=>inp.addEventListener('keydown',e=>{
+    if(e.key==='Enter'){
+      const row=inp.closest('.medit');
+      const b=row.querySelector('.msave');
+      commitEdit(row,b.dataset.s,parseInt(b.dataset.i,10));
+    }
+    if(e.key==='Escape'){moneyEdit=null;renderMoney();}
+  }));
+  /* add */
+  host.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>{
+    const key=b.dataset.add;
+    const n=document.getElementById('mn-'+key).value.trim();
+    const a=parseFloat(document.getElementById('ma-'+key).value);
+    if(!n||isNaN(a)||a<0)return;
+    moneyData()[key].push({n:n,a:a});
+    persistDebounced();renderMoney();
+  }));
+}
+
 /* ============ CLOCK ============ */
 function tickClock(){
   const n=new Date();
@@ -996,7 +1255,7 @@ document.getElementById('timerReset').addEventListener('click',()=>{
 (async function init(){
   renderStrip();renderDay();renderExercises();
   refreshChecklistLabels();paintChecks();renderWeightInputs();
-  renderPrs();renderProg();renderLogHistory();
+  renderPrs();renderProg();renderLogHistory();renderMoney();
 
   await loadState();
 
@@ -1010,7 +1269,7 @@ document.getElementById('timerReset').addEventListener('click',()=>{
   refreshChecklistLabels();paintChecks();
   if(!today.weights)today.weights={};
   renderWeightInputs();
-  renderPrs();renderProg();renderLogHistory();
+  renderPrs();renderProg();renderLogHistory();renderMoney();
   paintTimer();timerLoop();
 })();
 </script>

@@ -1,32 +1,37 @@
 # Dre Mays Workout
 
-A single-file, offline-capable workout app. Strength / hypertrophy / fat-loss program with a 6-day split, nutrition guide, PR tracker (grouped by muscle), daily check-off log with per-exercise weight entry, weight-trend chart, a session timer, and a live clock.
+Single-file workout app: 6-day split, nutrition guide, PR tracker by muscle group, daily log with per-exercise weights, weight-trend chart, session timer, liquid-glass UI.
 
-## Hosting on Vercel
+## Deploy (GitHub + Vercel only)
 
-This is a static site — no build step, no framework.
+1. Push this repo to GitHub.
+2. Import it at [vercel.com/new](https://vercel.com/new). Framework preset: **Other**. No build command.
+3. **Enable Blob storage** (required for cross-device sync):
+   - In your Vercel project dashboard → **Storage** tab → **Create Database / Store** → choose **Blob** → connect it to this project.
+   - Vercel automatically adds the `BLOB_READ_WRITE_TOKEN` environment variable. Redeploy once after connecting.
+4. Done. Open the deployed URL.
 
-1. Push this repo to GitHub (see below).
-2. Go to [vercel.com/new](https://vercel.com/new), import the repo.
-3. Framework preset: **Other**. Build command: **none**. Output directory: **leave blank** (root).
-4. Deploy. That's it.
+## Cross-device sync
 
-## Data & saving
+- Tap the **sync chip** in the app header (says "Tap to set up sync").
+- Create a passcode (6+ characters). Enter the **same passcode** on any other device and your logs, PRs, and weigh-ins appear there.
+- Type `OFF` in the same prompt to stop syncing on a device.
+- The passcode never leaves your device — only its SHA-256 hash is used as the storage key.
+- Without a passcode the app still saves everything **on-device** (localStorage) — nothing is lost, it just doesn't travel.
 
-All logs, PRs, weigh-ins, custom exercises, and timer state are saved to the browser's **localStorage** on the device you use. This means:
+## How data is stored
 
-- Data persists across reloads, closing the tab, and phone restarts.
-- Data is **per-device and per-browser** — it does not sync between your phone and laptop.
-- Clearing the browser's site data (or "Clear History and Website Data" on iOS Safari) erases it.
+| Layer | When | Survives |
+|---|---|---|
+| localStorage | always | reloads, restarts, offline |
+| Vercel Blob (via `/api/state`) | when a sync passcode is set | everything, on every device with the passcode |
 
-If you want cross-device sync later, that requires a small backend (e.g. Vercel KV or Supabase); ask and it can be added.
-
-## Install to iPhone home screen
-
-Open the deployed URL in Safari → Share → **Add to Home Screen**. It launches full-screen like a native app (PWA manifest included).
+Conflict rule: newest save wins (timestamped).
 
 ## Files
 
-- `index.html` — the entire app (HTML, CSS, JS, images all inlined)
-- `manifest.webmanifest` — PWA metadata
-- `vercel.json` — static hosting config
+- `index.html` — the entire app
+- `api/state.js` — serverless function that reads/writes state to Vercel Blob
+- `package.json` — dependency for the function (`@vercel/blob`)
+- `manifest.webmanifest` — PWA (Add to Home Screen on iOS)
+- `vercel.json` — hosting config
