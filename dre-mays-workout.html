@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#070B16">
+<link rel="manifest" href="/manifest.webmanifest">
+<title>Dre Mays Workout</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;800&family=Barlow:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#070B16;
+  --surface:rgba(17,25,45,.72);
+  --surface2:#1A2545;
+  --line:#243258;
+  --text:#EEF2FA;
+  --muted:#8D9AB8;
+  --cardio:#3DDCFF;
+  --lift:#FF7A29;
+  --core:#5DF29A;
+  --gold:#FFD166;
+  --pink:#FF8FB1;
+  --violet:#C79BFF;
+  --danger:#FF5A6E;
+  /* muscle group colors */
+  --g-back:#3DDCFF; --g-biceps:#5AA9FF; --g-chest:#FF7A29; --g-shoulders:#FFB13D;
+  --g-triceps:#FF8FB1; --g-quads:#5DF29A; --g-hams:#3DEFC3; --g-calves:#B8F25D;
+  --g-core:#C79BFF; --g-other:#8D9AB8;
+  --radius:18px;
+}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg);-webkit-text-size-adjust:100%}
+body{
+  font-family:'Barlow',-apple-system,sans-serif;
+  background:var(--bg);color:var(--text);
+  min-height:100vh;min-height:100dvh;
+  padding-bottom:calc(92px + env(safe-area-inset-bottom));
+  -webkit-font-smoothing:antialiased;
+  overscroll-behavior-y:none;
+}
+/* ambient color field behind everything — gives the glass something to refract */
+.ambient{position:fixed;inset:0;z-index:-1;pointer-events:none;background:
+  radial-gradient(420px 300px at 12% -4%, rgba(61,220,255,.16), transparent 65%),
+  radial-gradient(460px 340px at 96% 14%, rgba(255,122,41,.14), transparent 65%),
+  radial-gradient(520px 380px at 22% 88%, rgba(199,155,255,.13), transparent 65%),
+  radial-gradient(420px 320px at 88% 96%, rgba(93,242,154,.11), transparent 65%),
+  var(--bg);}
+.wrap{max-width:640px;margin:0 auto;padding:0 16px}
+button{font-family:inherit;touch-action:manipulation}
+input,textarea,select{font-size:16px}
+
+/* ---------- Liquid Glass ---------- */
+.glass{
+  position:relative;border-radius:inherit;
+  background:linear-gradient(135deg,rgba(255,255,255,.09),rgba(255,255,255,.02) 40%,rgba(255,255,255,.06));
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.22),          /* specular rim: top */
+    inset 0 -1px 0 rgba(255,255,255,.06),
+    inset 1px 0 0 rgba(255,255,255,.08),
+    0 8px 32px rgba(0,0,0,.45);
+  backdrop-filter:blur(16px) saturate(1.6);
+  -webkit-backdrop-filter:blur(16px) saturate(1.6);
+}
+/* Chrome only: real refraction via SVG displacement map (kube.io technique) */
+.lg-refract .glass{
+  backdrop-filter:url(#lgFilter) blur(2px) saturate(1.7);
+}
+.glass::before{ /* moving specular highlight streak */
+  content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.10) 46%,rgba(255,255,255,.02) 54%,transparent 70%);
+}
+
+/* ---------- Header (centered) ---------- */
+header{padding:calc(14px + env(safe-area-inset-top)) 0 14px;text-align:center}
+.clock{
+  font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.14em;
+  color:var(--muted);text-transform:uppercase;margin-bottom:10px;
+}
+.clock b{color:var(--text);font-weight:700}
+.logomark{
+  width:110px;height:auto;display:block;margin:0 auto 6px;
+  animation:logoglow 3.2s ease-in-out infinite;
+}
+@keyframes logoglow{
+  0%,100%{filter:drop-shadow(0 0 6px rgba(61,220,255,.35)) drop-shadow(0 0 18px rgba(61,220,255,.12));opacity:.88}
+  50%{filter:drop-shadow(0 0 14px rgba(61,220,255,.75)) drop-shadow(0 0 34px rgba(255,122,41,.30));opacity:1}
+}
+@media (prefers-reduced-motion:reduce){.logomark{animation:none;filter:drop-shadow(0 0 10px rgba(61,220,255,.5))}}
+.eyebrow{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.22em;color:var(--cardio);text-transform:uppercase}
+h1{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:32px;line-height:1;text-transform:uppercase;margin-top:4px}
+h1 span{background:linear-gradient(90deg,var(--lift),var(--gold));-webkit-background-clip:text;background-clip:text;color:transparent}
+.goalbar{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;align-items:center;justify-content:center}
+.goalchip{font-family:'JetBrains Mono',monospace;font-size:10.5px;padding:6px 11px;border-radius:999px;color:var(--muted)}
+.goalchip b{color:var(--text);font-weight:700}
+.syncstatus{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--muted);display:flex;align-items:center;gap:5px}
+.syncstatus .dot{width:6px;height:6px;border-radius:50%;background:var(--muted);transition:background .3s}
+.syncstatus.ok .dot{background:var(--core)} .syncstatus.err .dot{background:var(--danger)}
+.syncstatus.ok{color:var(--core)} .syncstatus.err{color:var(--danger)}
+
+/* ---------- Session timer ---------- */
+.timerwrap{border-radius:var(--radius);padding:14px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px}
+.timerdisp{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:30px;letter-spacing:.02em;flex:1;font-variant-numeric:tabular-nums}
+.timerdisp.running{color:var(--core);text-shadow:0 0 16px rgba(93,242,154,.4)}
+.timerlabel{font-family:'JetBrains Mono',monospace;font-size:9.5px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+.tbtn{
+  border:none;border-radius:12px;min-height:48px;min-width:64px;cursor:pointer;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;
+  text-transform:uppercase;letter-spacing:.05em;transition:transform .1s;
+}
+.tbtn:active{transform:scale(.94)}
+.tbtn.start{background:linear-gradient(135deg,var(--core),#8AF7B8);color:#06170C;box-shadow:inset 0 1px 0 rgba(255,255,255,.4)}
+.tbtn.pause{background:linear-gradient(135deg,var(--gold),#FFE29A);color:#1B1400;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.tbtn.reset{background:rgba(255,255,255,.08);color:var(--muted);border:1px solid rgba(255,255,255,.14)}
+
+/* ---------- Tab bar (liquid glass) ---------- */
+nav.tabs{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom));left:12px;right:12px;z-index:50;border-radius:24px;padding:6px}
+.tabrow{display:flex;gap:2px;max-width:616px;margin:0 auto}
+.tabbtn{
+  flex:1;min-height:50px;border:none;background:transparent;color:var(--muted);
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11.5px;
+  text-transform:uppercase;letter-spacing:.04em;border-radius:18px;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  transition:background .18s,color .18s,transform .12s;
+}
+.tabbtn:active{transform:scale(.93)}
+.tabbtn .ico{font-size:17px;line-height:1}
+.tabbtn.active{background:rgba(255,255,255,.10);color:var(--text);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+.tabbtn.active.t-sched{color:var(--cardio)} .tabbtn.active.t-ex{color:var(--lift)}
+.tabbtn.active.t-diet{color:var(--core)} .tabbtn.active.t-pr{color:var(--gold)}
+.tabbtn.active.t-log{color:var(--pink)} .tabbtn.active.t-prog{color:var(--violet)}
+
+.panel{display:none;padding-top:16px;animation:fade .18s ease}
+.panel.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.panel{animation:none}.glass::before{display:none}}
+
+/* ---------- Day strip ---------- */
+.daystrip{display:flex;gap:5px;margin-bottom:14px}
+.daychip{
+  flex:1;min-height:54px;border-radius:14px;text-align:center;cursor:pointer;border:none;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+  transition:transform .1s,box-shadow .18s;color:var(--text);
+}
+.daychip:active{transform:scale(.94)}
+.daychip .d{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase}
+.daychip .dot{width:6px;height:6px;border-radius:50%;background:var(--lift)}
+.daychip.rest .dot{background:var(--muted)} .daychip.legs .dot{background:var(--core)}
+.daychip.sel{box-shadow:inset 0 0 0 1.5px var(--cardio),inset 0 1px 0 rgba(255,255,255,.22),0 8px 32px rgba(0,0,0,.45)!important}
+
+/* ---------- Cards ---------- */
+.card{border-radius:var(--radius);padding:16px;margin-bottom:12px}
+.card.tint-lift{background:linear-gradient(160deg,rgba(255,122,41,.10),rgba(17,25,45,.72) 45%)}
+.card.tint-legs{background:linear-gradient(160deg,rgba(93,242,154,.10),rgba(17,25,45,.72) 45%)}
+.card.tint-rest{background:linear-gradient(160deg,rgba(141,154,184,.10),rgba(17,25,45,.72) 45%)}
+.sess-title{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:24px;text-transform:uppercase;line-height:1.05}
+.sess-sub{color:var(--muted);font-size:13px;margin-top:3px}
+.block{display:flex;gap:12px;margin-top:16px;align-items:flex-start}
+.block .bar{width:4px;border-radius:4px;align-self:stretch;min-height:36px}
+.block.b-cardio .bar{background:var(--cardio)} .block.b-lift .bar{background:var(--lift)}
+.block.b-core .bar{background:var(--core)} .block.b-rest .bar{background:var(--muted)}
+.block h4{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;margin-bottom:4px}
+.block.b-cardio h4{color:var(--cardio)} .block.b-lift h4{color:var(--lift)}
+.block.b-core h4{color:var(--core)} .block.b-rest h4{color:var(--muted)}
+.block p{font-size:14px;line-height:1.55}
+.exline{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 0 9px 10px;border-bottom:1px solid rgba(255,255,255,.06);font-size:14.5px;border-left:3px solid var(--gline,transparent);margin-left:-10px}
+.exline:last-child{border-bottom:none}
+.exline .rx{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted);white-space:nowrap;font-weight:500}
+.gdot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:8px;vertical-align:1px}
+.note{border-left:3px solid var(--lift);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--muted);line-height:1.55;margin-bottom:12px}
+.note b{color:var(--text)}
+
+.sec{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:19px;text-transform:uppercase;letter-spacing:.03em;margin:22px 0 10px;display:flex;align-items:center;gap:10px}
+.sec:first-child{margin-top:0}
+.sec::after{content:'';flex:1;height:1px;background:var(--line)}
+.sec.c-cardio{color:var(--cardio)} .sec.c-lift{color:var(--lift)} .sec.c-core{color:var(--core)}
+.sec.c-gold{color:var(--gold)} .sec.c-pink{color:var(--pink)} .sec.c-violet{color:var(--violet)}
+
+/* ---------- Forms ---------- */
+.macrogrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.macro{border-radius:14px;padding:14px 8px;text-align:center;background:rgba(255,255,255,.05);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+.macro .v{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:19px}
+.macro .l{font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+.inputrow{display:flex;gap:8px;margin-top:12px;align-items:center}
+.inputrow label{font-size:13.5px;color:var(--muted);flex:1;line-height:1.3}
+input[type=number],input[type=text],select{
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;
+  color:var(--text);font-family:'JetBrains Mono',monospace;padding:12px;min-height:48px;
+  -webkit-appearance:none;appearance:none;
+}
+input[type=number]{width:104px;text-align:right}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--cardio);outline-offset:1px;border-color:transparent}
+button.act{
+  background:linear-gradient(135deg,var(--lift),#FF9A4D);color:#170F05;border:none;border-radius:12px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:15px;text-transform:uppercase;
+  letter-spacing:.05em;padding:0 18px;min-height:48px;cursor:pointer;transition:transform .1s;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.35);
+}
+button.act:active{transform:scale(.96)}
+.mealrow{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;line-height:1.4}
+.mealrow:last-child{border-bottom:none}
+.mealrow b{display:block;font-size:11px;color:var(--core);font-family:'JetBrains Mono',monospace;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:3px}
+.mealrow span{color:var(--muted);font-size:12px}
+.foodgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}
+.food{border-radius:12px;padding:10px 12px;background:rgba(255,255,255,.045);font-size:13px;line-height:1.4;box-shadow:inset 0 1px 0 rgba(255,255,255,.08)}
+.food b{display:block;font-size:12px;margin-bottom:2px}
+.food span{color:var(--muted);font-size:11px;font-family:'JetBrains Mono',monospace}
+
+/* ---------- Checklist ---------- */
+.checkitem{display:flex;align-items:center;gap:14px;padding:13px 4px;border-bottom:1px solid rgba(255,255,255,.06);cursor:pointer;user-select:none;-webkit-user-select:none;min-height:56px}
+.checkitem:last-of-type{border-bottom:none}
+.checkbox{width:28px;height:28px;border-radius:9px;border:2px solid #33456F;background:rgba(255,255,255,.05);flex-shrink:0;position:relative;transition:background .18s,border-color .18s,transform .1s}
+.checkitem:active .checkbox{transform:scale(.9)}
+.checkbox.on{background:var(--core);border-color:var(--core);box-shadow:0 0 14px rgba(93,242,154,.35)}
+.checkbox.on::after{content:'';position:absolute;left:9px;top:4px;width:6px;height:12px;border:solid #0A1408;border-width:0 2.5px 2.5px 0;transform:rotate(40deg)}
+.checklabel{flex:1}
+.checklabel .t{font-weight:600;font-size:15.5px;transition:color .18s}
+.checklabel .s{font-size:12px;color:var(--muted);margin-top:1px}
+.checkitem.done .checklabel .t{color:var(--core)}
+.streak{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--pink);margin-top:12px;text-align:center}
+.wtrow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.wtrow:last-child{border-bottom:none}
+.wtrow .gdot{flex-shrink:0}
+.wtrow .wn{flex:1;font-size:14px;min-width:0}
+.wtrow input{width:78px;text-align:center;padding:10px 6px;min-height:44px}
+.wtrow .wu{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;width:20px}
+
+/* ---------- PR / Log ---------- */
+.prcard{border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;border-left:3px solid var(--gline,var(--gold))}
+.prtitle{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:17px;text-transform:uppercase}
+.prbest{display:flex;align-items:baseline;gap:8px;margin-top:3px;flex-wrap:wrap}
+.prbest .w{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:22px;color:var(--gold)}
+.prbest .r{font-size:12px;color:var(--muted)} .prbest .none{font-size:13px;color:var(--muted)}
+.prform{display:flex;gap:8px;margin-top:12px}
+.prform input{width:100%;text-align:center;padding:10px 8px}
+.prform button{background:linear-gradient(135deg,var(--gold),#FFE29A);color:#1B1400;border:none;border-radius:12px;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:14px;text-transform:uppercase;padding:0 16px;cursor:pointer;white-space:nowrap;min-height:48px;transition:transform .1s;box-shadow:inset 0 1px 0 rgba(255,255,255,.5)}
+.prform button:active{transform:scale(.95)}
+.prhist{font-size:11px;color:var(--muted);margin-top:8px;font-family:'JetBrains Mono',monospace}
+textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:12px;color:var(--text);font-family:'Barlow',sans-serif;padding:12px;margin-top:14px;resize:none;min-height:72px;line-height:1.5;-webkit-appearance:none;appearance:none}
+.logentry{border-radius:var(--radius);padding:14px 16px;margin-bottom:10px}
+.logentry .ldate{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--pink);font-weight:700}
+.logentry .lworkout{font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:17px;text-transform:uppercase;margin-top:3px}
+.badgerow{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.badge{font-family:'JetBrains Mono',monospace;font-size:10px;font-weight:700;padding:5px 9px;border-radius:999px;border:1px solid rgba(255,255,255,.12);color:var(--muted)}
+.badge.hit{border-color:rgba(93,242,154,.5);color:var(--core);background:rgba(93,242,154,.08)}
+.lognote{font-size:13.5px;color:var(--muted);margin-top:10px;line-height:1.5}
+.del-entry{background:none;border:none;color:var(--danger);font-family:'JetBrains Mono',monospace;font-size:11px;cursor:pointer;margin-top:10px;padding:8px 0;min-height:40px}
+
+/* ---------- Progress ---------- */
+.bignum{font-family:'JetBrains Mono',monospace;font-weight:700;font-size:30px;letter-spacing:-.02em}
+.progressbar{height:12px;background:rgba(255,255,255,.06);border-radius:999px;overflow:hidden;margin-top:14px;box-shadow:inset 0 1px 2px rgba(0,0,0,.4)}
+.progressbar .fill{height:100%;background:linear-gradient(90deg,var(--cardio),var(--core));width:0%;transition:width .5s cubic-bezier(.2,.8,.2,1);border-radius:999px}
+.logrow{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06);font-size:14px;min-height:44px}
+.logrow:last-child{border-bottom:none}
+.logrow .dt{color:var(--muted);font-size:11.5px;font-family:'JetBrains Mono',monospace}
+.logrow .wv{font-family:'JetBrains Mono',monospace;font-weight:500}
+.logrow .del{background:none;border:none;color:var(--danger);cursor:pointer;font-size:13px;padding:10px;min-width:40px;min-height:40px}
+#chart{width:100%;height:150px;margin-top:14px}
+.empty{color:var(--muted);font-size:13.5px;text-align:center;padding:20px 0;line-height:1.5}
+
+/* ---------- Edit mode ---------- */
+.editbar{display:flex;justify-content:flex-end;margin-bottom:10px}
+.editbtn{background:rgba(255,255,255,.08);color:var(--text);border:1px solid rgba(255,255,255,.14);border-radius:999px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;text-transform:uppercase;letter-spacing:.05em;padding:9px 16px;min-height:40px;cursor:pointer}
+.editbtn.on{background:var(--cardio);color:#06131B;border-color:transparent}
+.exctrl{display:flex;gap:2px;flex-shrink:0}
+.exctrl button{background:rgba(255,255,255,.08);border:none;color:var(--text);border-radius:8px;width:34px;height:34px;font-size:14px;cursor:pointer}
+.exctrl button:active{background:rgba(255,255,255,.18)}
+.exctrl .rm{color:var(--danger)}
+.addform{display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px;padding-top:14px;border-top:1px dashed rgba(255,255,255,.15)}
+.addform .row2{display:flex;gap:8px}
+.addform input[type=text]{width:100%;font-family:'Barlow',sans-serif}
+.addform select{flex:1;color:var(--text)}
+.addform input.rxin{flex:1;text-align:left;width:auto}
+</style>
+</head>
+<body>
+
+<div class="ambient"></div>
+
+<!-- Liquid Glass refraction filter (kube.io technique — Chromium only via backdrop-filter:url()) -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <filter id="lgFilter" color-interpolation-filters="sRGB" x="0" y="0" width="100%" height="100%">
+    <feImage href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAACgCAYAAAB6+9Q9AAAUO0lEQVR42u3dPW8c173H8d85M/tASnxIlIubBA5wgXubNC6CFCniKpWFGHDjyq5twHBjvQHbb0BuBAFyG8ophAACJFCVKjWqVKjWG1ChIlIgiyJ3zi3mzM5/zpzZXVKPXH4/wIAUtSJnaQP/3/mfh3Hff/990PvsBwEAcPp8937fXvmub+DxZamcSEUZr0IqvOSdVDjJ/y//DwEATh+/JxVB8kEqKqmYScVRfZUH0uNLZywAPPpRGm9Ko4lUjqXRB3XR903h95Jz9SVJcvxPBAA4hYIUJIUgVUFSVV9hVl//9bNUvpRGB9L4ufTo2zUMAA8vS9NtaTyVph9I5ciM9mPxt4W/EwAAADi9GUAhtNc8CMzaKxxJ1aH0P3vS+IU0fSo9fAvdgTcaAB5clTa2pHN/iCP+UbfV7725nAkBceRPBgAAnObi75oAIFP8bTeg6QgcSVUMArMd6Y//kDaeSQ++PmUB4P41aXNLOve7uvCPRlIxksrStPqLTOFPiz8JAABwmkNAaENA8+deEJhpPjWgIykc1ld1XvrwZ2nzmXT/q/c8ANy9Iu1ckM7/VhpPpNG4HvWXmXZ/U/ydk5xvW/6O4g8AWLMQIEkudgIU6pF/FZJuQDMl0ASBqRQ2pOqc9Od/SjtPpLvfvIcB4N6etPuBNN2QxuNY/NOV/WbU7zJz/iz8AwCsZwpoi7/ieoDmY5XpBjRrA8IkXjEMfLQn3fviPQkAt3+Sdi9I5y5Ik2ks/smov0hH/Xb072LBp/gDANY8BMzDQAwAVdwmWCVrAzSLFXomaSRpXF9hIv31X9LuE+n2l+8wAOxfl371e2ljQ5pMYvEvk+Lvu4v9nOsWfzv3bz8CALA2dT/0Q4DSEGADQJEEgTIGgVEbBC5el/Y/fwcB4M4Nafs30sY0Fv9RHPnnRv1+uOXfK/qORgAAYH2KvzN/CAMhoDclUEmuCQKz+LE0H0vJjaSPb0h3PnuLAWD/prT967r4z1v+o3zL39lRv29b/vOFfqbwd4o+CQAAsDYtABMGkqmA+S6BWPy97waBJgS4meQKc8UgcPGmtP/pWwgAt25JO7vSNJnvL8tkod/ASv/OVr9My5/2PwBgLTsBJgjI7gywHQFvdgh4zacEnJdmvg4DzneDgC+kT25Jtz55gwHg5r60u5Mv/t5n2v5u+Zx/b/RPAAAArGkKsF2AoemAytVrAkKQqhgCXFUHAjeTjprueryamvvpvnTz4hsIADfuSL/ezhT/tO1vRvu5432zhd/O+zs2BAAA1mTUr+6JgE1dm38+EASaA4N8JQVXhwI1XYCZ6aybAPDMS5/dkW58/BoDwPV96TfbZo//orZ/pvDLbvczRd4lhR8AgLXlTPF3beG36wJCMNMCIRZ/kySaujpz3TV2zRN0n0r6fF+6vkInYGkA+Om29Ptf9Yt/Ufbn+xet9Fey1U/m5L9O/ScIAADWtCUQ1BZ/Fwt7SAp8yO0OiF+vTF2tqjoIHJkA8MJJ/3bSl7eln/7+igHgwm67z78z8k/2+KeH+xyn9W/TEfUfALCGtb+ugaFb85puQFPkO/MG6fbA+NrKdgHMWrtDJx24urA/Ca/YAdi7J104F4u/OeSnt+BvaL7fFv70rH8xBQAAOGOc2fpnar1c0hEwr01PDpzX0hgCvLpdgANJzyV9cU/a++gEAeDKXemDXWk6aVv/zcN8ckf75gq/coV/aIUfo38AwLp3ATKBwJ4T0BkUhzYc2CAQYvu/EwJm9XlBh64+NuCFpP8E6Zu70pW/HTMAXNhpD/opR8lDfewWhBXa/rl9/i534h8JAABwBlJAb4eAKYHBJWkgZHYLxsOC7DOEfAwDR5JeSvpF0pOdY3YArt2Xfns+/2CfVdr+Skb/8wWA6UjfZWo/RwEDANZx1B9H7y55QfO1kKuHoRsKgrmq0A60q1j845OEdRhDwPMgfXVfuvaXFQPA1qY0Gdfn+2eLv1+w0j8Z+fce7pMWfSo9AOAsSOrdfAFgJjQM/fOQXr4OAvYhgk0IeCnpIEjPNlfsAFx9IP3u3PLi7xfM+2cf7jNw2A9BAABwproCoa17nUOCku2B850B6i4W7HUBqvrEwGwICNIvQfr6gXT1T0sCwNaGNBnFFf9Fu/Bv4YI/ly/8i0b/WlD0yQIAgLUp+Fqw3i3t+5s1AumXF3UBQtMFaKYDYgA4DLELsLGkA3D5ofSHc8Pz/i59sI/6c/+LHvAzOPqn6gMAzlAiCFqtC5AcG9BfDNh0BKrudIDtAhxKehGkSw+lyx8OBIDtaRz9pyN/M/r3J2j7p58z1AcAnFm5DoANA6H/uT0oqAkJ8+KvegrAx0cIp9MBh0E6GElPpws6AFNz2E/vpD+3oPine/sXLPTrPfwn/b0QCgAA6zfonz8OuPM1+3wAGwTC8Po42zEIru0GVKrr9WAXYNz9Pr755MdH0qSZ9/fJfv+BOX8NtP7tlr/etr+h/f+OjgAAYM1H/kmtC5n6GMyfO61+tYsCg/leIXf5uhMwi9dRIR2U0rePMh2AzXG78K9p/bt04Z8Z8aft/9zE/sK9/W5xVwQAgLXrAuQKXuh3BOyDg9J/nDwuoLsuoHloULMmIHYGmgWBz8eZADAZtav+i4FjfpU5zjdt6S9c9S8NHvlL8QcAnKkQoHY07zrtAPWW/8/n/+Pf2YcIzRcLmjUBwbfrAeZTAXEtQC8AjMtkxb9ffLSvLfa9Vf+ZUf+x9vqTBgAA61b5V6h96YOC0vUAIX4v5zLbAZM1AZ3tgZJmRX04UMNL0uXHZs//kjP+lVvpn4763cAc/6J6zzoAAMC6snP2q7zO5oZMnQ2Zxfdh2XqAol4LcOmx6QBMMqv+/ZLH+Q7N+y8byTtG+wCAsx4Gkq7A4GFBC6YF5i3/JFTYhYNV6O8KOAgmAJTFglX/8Yc4N7Coz2VCS679P/ALoP4DAM6a3gI/9cNAblGglGwdtH/vMgcFyawJiAHgqEgCgC+6Z/zbH+JylXzgSX4rFXSqPgAAbU1cskbALhQMyQC8+yxhs1XQ/NuqOTAoPi54HgDmc//JU/3sKN+Z5NFbCuBWq+8c8gMAQD4E5A4LSuu7koOD7BkBQ8VfofvkwJkNAM3oP93q5xYV7tewop88AAA4q3JbAgePCV7ldWnxtx/NUwQrZwJAZ94/Kf72h61csKnsAAC8clfgOGEgZJJFp/ibENAGgOIEhZ4iDwDA2w8DuVbCgtfOtxImTxj0P0hSXP0vr+5+/EUXAAB4P8LBKpev1wHIS9/JPAwIAACcHQQAAAAIAAAAgAAAAAAIAAAAgAAAAAAIAAAAgAAAAAAIAAAAgAAAAAAIAAAAgAAAAAAIAAAAgAAAAAAIAAAAgAAAAAAIAAAAgAAAAAAIAAAAEAAAAAABAAAAEAAAAAABAAAAEAAAAAABAAAAEAAAAAABAAAAEAAAAAABAAAAEAAAAAABAAAAEAAAAAABAAAAEAAAAAABAAAAEAAAACAAAAAAAgAAACAAAAAAAgAAACAAAAAAAgAAACAAAAAAAgAAACAAAAAAAgAAACAAAAAAAgAAACAAAAAAAgAAACAAAAAAAgAAACAAAABAAAAAAAQAAABAAAAAAAQAAABAAAAAAAQAAABAAAAAAAQAAABAAAAAAAQAAABAAAAAAAQAAABAAAAAAAQAAABAAAAAAAQAAABAAAAAgAAAAAAIAAAAgAAAAAAIAAAAgAAAAAAIAAAAgAAAAAAIAAAAgAAAAADeWQD4LsaA4GMccCteAADg3Vu1bnvJxVr/g6RSkkIhKcTLSSFkfkDI/MAhgf8eAAC81iJ/wtc6+zUnOSepagKAr4t+c/VCQPO1VYu8IwwAAPBWir7LvNx1i79TXfibS00HoCqkUMWiH9riH3I1PByzyC94XRCzCQAA6vtJi76WFH3Fwi9T/L03AWBWSJViB6CKxdnFMGBrd6i/HuJrXVPEXbfADxX20NwQXQEAADrF261S65PR/nxkb4v9wEfnJe+kojAB4KgJAFUbBHLFXy4zdA/mjzEcuLD8jRICAABYbdTvXOblLv895iN+tSN/3wQAL5VpAJiFWPxjEGjWBNoQkAaBENqbaqYN7GKDTpdg4A03rwEA4EzVfLc4D6SvccnXXKbw26LfmfePxb9IA8BBWQeAmeoQUEmqzKLAdD1gsMU/XRMQMu8idP99rp1BRwAAcFZH/G6VroDr/9klhV/qLvbzzRWLf1FIk7J+nZekS49jF6CQqngmQHD5qxtNkq+ZiBKkTGzJC/Y1tAMAAOtY9G1rftnr0i5AUmed67cL3NDVjP6LevR/+bHpAEjSyzJ2AOxUQEimA+wiQDOab7YONgv85gsDzfoA+7WTpCMAANY9JKR1vRMYXHcawI7+XWarn/Ptqv8mAIzL9sfNPz0YSUchmQqoYjegakfpwS4KcN2pgOY1bsm0QG6hIFsCAQBnoRHQ+9oK7X6XCQK9w31sCPD91n9ZSJNRJgA8H0uHVR0CmnUAwYaA5HyATgfA3mu6SFDKL/jLnA9ACAAAnIniP7QOwA3/Wbmtferv809X/ftY/EeltDluv938YUDfPqoXAx4V0szX16L1APO5frMWIKg7RdBbD2DmMbJrBKj+AIB1TgC5Of6kPtp5//k/scXeFH0tm/c3K/8npfTjo0wHQJJeNF0A1dMAdldACHU3wKu/E2Bw5B76c//24KDcFsDgyAEAgDUe/WdG+Gl3oNctd8nfZeb8/VDrv6xH/9Nx9+d3AsDTqbQzkw5Dey7A/Krqb1gFyVVmtB+ShYBmXsCe/Jc9BZBnBgAASAPZwp+GgN4+fxMCvDfb/kzrvyikUZz7354uCACXHkr/+GMdAGwXoFD3qODOw4PUPQqgV99N8e91DJJTBAEAOFMZwPUP/umt+l8w6u+1/V274n8++h/Vo//LDxcEAEl6tiGdr6RpqBcElk0HwJkpgNA/LXDRmUDzkX/2L/odABYDAgDWdsC/bNV/Mt+vzPz/ou1+ds//qKxH/1sb/R/ZCwBfP5B+/lDaCNIk9LsAlSRf1QsEXUgeIxySIJCZDhjsAlDxAQCM/jsvso/vzY36vcsX/2b0Px5JGxPp6oMVAoAkPduUzlV1ABjFF6UhwC3pAqwSeOyzBHKdAAAA1rUVMLjNT5mDfZqAsKDtnyv+k7G0tZm/nWwA+Oq+9M8/19MA4/iiIoYA7+rpAFfFm8t1ATKLAtIvuaTPn36NaQAAwJrV/Gy3O93X36YA0ykYGP13Rv6+O+8/HkubU+na/WMEAEl6slNPA4xlugBO8rN6HcB8O2DSCZgX+2RRgEsO++kdIkTFBwCckVSQbf1nDvhxQwv/fP+c//noPxb/jal0YWf4NgYDwDd3pb2P2mmAQlLhYicgBgHXdAJcDAExBdj1ALLHBCtJNxwHDAA4a90Al28RdJ7qt2DeP9f2914q4n7/8ViaTqTzm9KVuycIAJL0xT3pX3810wBNy+Gong6Y30wVbzQJAMG0BZxZDGgXCx77QUEAAKzZ6D+34n/Vtr83h/2MRtJkIm1uSnv3Ft9Kuexen+zWXYAmABRm1aGbdW+sqiSfCwBmlaDLPETI/mJypwMCAHDqR/9uIAwMtf4Xne+fzPk38/6TsbSxIV3YXX5PSwPAl7el6xelkZNKEwCaq6q6QaBZE5AGgGaxYDPkd7ntgblfEAAAaxYEFh7241bY62/a/nbR33RD2tmWfrr9GgKAJH2+L934OJkGSLsAMzOid7ETUHWLvzOrBEP8aM8GaP4OAID1rP7Drf+mC6Ch+X7XPeK3TFb8T6fS9pZ0fX+12ylXve/P7kg3L8b5hng5L7mjeMO+DgEyiwIr150SsFfnECC7QyAMPGYYAIDTV+/bj8mCv14HYOCQH5ce8uO7bf+m+G+dl27sr35/5XHezKf70q1PkgBggsDMS5rFRYFVfWJgCPUDhHyl/l7BkHkmAB0AAMCaJoJs6z/5vHmwT+6EPz9U/Lekm7eOdzvlce//k1vS/qeSfya5Il6HdQjQLIYB+xzhZmGgj3+2RwbbXQLJOQEEAQDA2hV+dQt+Lwj4/Gr/Ttt/1C3+57ekWzePf1vlSd7LxZvSnc8kPZXcC8kdmCDQPDygmQ6o4nRAfJxwb01Asi7AUfgBAOuYA3pzAv05/2alv8uc7V/Y4j+pD/rZ2pb2b5zsfsqTvpGPb0j7n0vu3/G7HKg+JehInWcJd6YDMrsDlOkCdKYEAAA4vYP/zidulUf6DjzYpznkZzKpt/pt70j7109+b+WrvLGL16XbX0rhiaTnkl5IeinpsBsCZKYEfGjPC8iFgHkY4P8bAMCahAC3oPj7BQ/1Sc/2n0zrQ352L0i3f3q1+ypf9Y39Pd7AvS+k8B9Jv8QQ8DLpBlTtxzQEuIEQAADAWrUCBlr+nS1+TQBoFvuN2z3+m+ele3uv55bK1/XePtqT7n4j7TyRwnMpHEjhpRQGugHePjugUnYaAACAdSn+nQ5AbqV/MuovR7H4T6TpprRzQbp75fXdVvk63+Pf4o3d/0rafCaFX+ogoMM2CIRMN6BzYFAs/uwEAACsQ/G3B/5kD/gpumf6F3Gh32giTTakzS3p/rXXf2vlm3i/f4k3+uBraeOZFF5IoxgEinRaoMoEAfFMAADAmgz+k5G/z+zvL8rY8o+FfzyVNrakB1ff3L2Vb/KN/yne+MNL0vSpNH4hlQd1NyAcSUW6SDC0Jwc6dgIAAE578VfyJD/Xb/c3hb+MhX+6LT28/Obvr3wbv4QPzRt59K00fh47Ai/V2zIY4tqAwDQAAOCUJ4D0kJ9O8S+lchxH/JvSox/f7u2Vb/v38X/JG3x8qV4nYKcGXNU9JRAAgFOZAcxCv06rfyI9vvxu761817+c/172C/iO/4EAAKdP9UM9u/2++n+18HszvFoNewAAAABJRU5ErkJggg==" x="0" y="0" width="100%" height="100%" preserveAspectRatio="none" result="map"/>
+    <feDisplacementMap in="SourceGraphic" in2="map" scale="28" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<header>
+  <div class="wrap">
+    <div class="clock" id="clock"></div>
+    <img class="logomark" src="data:image/png;base64,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" alt="">
+    <div class="eyebrow">Strength · Hypertrophy · Fat Loss</div>
+    <h1>Dre Mays <span>Workout</span></h1>
+    <div class="goalbar">
+      <div class="goalchip glass">Goal <b>−15 lbs</b></div>
+      <div class="goalchip glass">Pace <b>~1 lb/wk</b></div>
+      <div class="syncstatus" id="syncStatus"><span class="dot"></span><span id="syncText">Loading…</span></div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- SCHEDULE -->
+  <section id="panel-sched" class="panel active">
+    <div class="timerwrap glass">
+      <div style="flex:1">
+        <span class="timerlabel">Session</span>
+        <span class="timerdisp" id="timerDisp">00:00</span>
+      </div>
+      <button class="tbtn start" id="timerStart">Start</button>
+      <button class="tbtn reset" id="timerReset">Reset</button>
+    </div>
+    <div class="daystrip" id="daystrip"></div>
+    <div class="editbar"><button class="editbtn" id="editToggle">✎ Edit workouts</button></div>
+    <div id="dayview"></div>
+    <div class="note glass"><b>Cardio alternates every other day:</b> run Sun/Tue/Thu, bike Mon/Wed/Fri, easy Saturday. On leg days lift first, cardio after.</div>
+  </section>
+
+  <!-- EXERCISES -->
+  <section id="panel-ex" class="panel">
+    <div class="sec c-lift">Rep scheme</div>
+    <div class="card glass">
+      <div class="exline"><span>First compound of the day</span><span class="rx">4 × 5–8 heavy</span></div>
+      <div class="exline"><span>Secondary compounds</span><span class="rx">3 × 8–10</span></div>
+      <div class="exline"><span>Isolation work</span><span class="rx">3 × 10–15</span></div>
+      <div class="exline"><span>Rest</span><span class="rx">2–3 min / 60–90 s</span></div>
+      <div class="exline"><span>Progression</span><span class="rx">+5 lb or +1 rep weekly</span></div>
+    </div>
+    <div id="exlist"></div>
+    <div class="note glass"><b>Strength is the canary on a cut.</b> If top-set weights drop 2+ straight weeks, eat more protein or slow the cut. Hold the bar weight first.</div>
+  </section>
+
+  <!-- DIET -->
+  <section id="panel-diet" class="panel">
+    <div class="sec c-core">Your targets</div>
+    <div class="card glass">
+      <div class="inputrow">
+        <label for="bw">Current body weight (lbs)</label>
+        <input type="number" id="bw" inputmode="decimal" placeholder="185">
+        <button class="act" id="calcBtn">Set</button>
+      </div>
+      <div class="macrogrid">
+        <div class="macro"><div class="v" id="mCal">—</div><div class="l">Calories</div></div>
+        <div class="macro"><div class="v" id="mPro">—</div><div class="l">Protein g</div></div>
+        <div class="macro"><div class="v" id="mCarb">—</div><div class="l">Carbs g</div></div>
+      </div>
+      <div class="macrogrid" style="grid-template-columns:repeat(2,1fr)">
+        <div class="macro"><div class="v" id="mFat">—</div><div class="l">Fat g</div></div>
+        <div class="macro"><div class="v" id="mWater">—</div><div class="l">Water oz</div></div>
+      </div>
+    </div>
+    <div class="note glass" style="border-color:var(--core)"><b>How it's set:</b> calories ≈ BW × 12 (~1 lb/wk deficit at your activity), protein 1 g/lb, fat 0.35 g/lb, carbs fill the rest — carbs fuel your runs and lifts, don't crush them to zero. Adjust off the 2-week scale trend.</div>
+
+    <div class="sec c-core">Best protein sources</div>
+    <div class="card glass">
+      <div class="foodgrid">
+        <div class="food"><b>Chicken breast</b><span>31 g / 165 cal per 100 g</span></div>
+        <div class="food"><b>93/7 ground turkey</b><span>27 g / 176 cal per 100 g</span></div>
+        <div class="food"><b>Egg whites</b><span>11 g / 52 cal per 100 g</span></div>
+        <div class="food"><b>Nonfat Greek yogurt</b><span>10 g / 59 cal per 100 g</span></div>
+        <div class="food"><b>Canned tuna</b><span>26 g / 116 cal per 100 g</span></div>
+        <div class="food"><b>Shrimp</b><span>24 g / 99 cal per 100 g</span></div>
+        <div class="food"><b>Cottage cheese (low-fat)</b><span>11 g / 72 cal per 100 g</span></div>
+        <div class="food"><b>Whey protein</b><span>24 g / 120 cal per scoop</span></div>
+        <div class="food"><b>Lean beef 93/7</b><span>26 g / 172 cal per 100 g</span></div>
+        <div class="food"><b>Salmon</b><span>25 g / 208 cal per 100 g</span></div>
+      </div>
+    </div>
+
+    <div class="sec c-core">Smart carbs &amp; fats</div>
+    <div class="card glass">
+      <div class="exline" style="--gline:var(--g-quads)"><span>Rice, potatoes, oats</span><span class="rx">around workouts</span></div>
+      <div class="exline" style="--gline:var(--g-quads)"><span>Fruit + berries</span><span class="rx">anytime, fiber + volume</span></div>
+      <div class="exline" style="--gline:var(--g-quads)"><span>Beans / lentils</span><span class="rx">protein + carbs combo</span></div>
+      <div class="exline" style="--gline:var(--gold)"><span>Olive oil, avocado</span><span class="rx">measure it — 120 cal/tbsp</span></div>
+      <div class="exline" style="--gline:var(--gold)"><span>Nuts</span><span class="rx">portion trap — count them</span></div>
+      <div class="exline" style="--gline:var(--gold)"><span>Whole eggs</span><span class="rx">2–3/day, rest whites</span></div>
+    </div>
+
+    <div class="sec c-core">Timing around training</div>
+    <div class="card glass">
+      <div class="mealrow"><b>Pre-workout · 60–90 min</b>Carb + a little protein: oats + whey, banana + yogurt, rice cakes + turkey <span>· fuels the run AND the lift</span></div>
+      <div class="mealrow"><b>Post-workout · within 2 hrs</b>25–40 g protein + carbs: shake + banana, chicken + rice <span>· biggest meal of the day fits well here</span></div>
+      <div class="mealrow"><b>Before bed</b>Slow protein: cottage cheese or Greek yogurt <span>· casein feeds recovery overnight</span></div>
+    </div>
+
+    <div class="sec c-core">Sample training day</div>
+    <div class="card glass">
+      <div class="mealrow"><b>Breakfast</b>4 eggs or egg whites + oatmeal with berries <span>· ~40 g protein</span></div>
+      <div class="mealrow"><b>Lunch</b>Chicken or lean beef, rice, vegetables <span>· ~45 g protein</span></div>
+      <div class="mealrow"><b>Post-workout</b>Whey shake + banana <span>· ~30 g protein</span></div>
+      <div class="mealrow"><b>Dinner</b>Salmon or turkey, potatoes, salad <span>· ~40 g protein</span></div>
+      <div class="mealrow"><b>Late hunger</b>Greek yogurt or cottage cheese <span>· ~20 g protein</span></div>
+    </div>
+
+    <div class="sec c-core">Eating-out swaps</div>
+    <div class="card glass">
+      <div class="exline"><span>Burrito bowl over burrito</span><span class="rx">−300 cal, same protein</span></div>
+      <div class="exline"><span>Grilled over fried, always</span><span class="rx">−200–400 cal</span></div>
+      <div class="exline"><span>Sauce on the side</span><span class="rx">−150–300 cal</span></div>
+      <div class="exline"><span>Double protein, half rice</span><span class="rx">more filling, same cal</span></div>
+      <div class="exline"><span>Diet soda / water over regular</span><span class="rx">−150+ cal each</span></div>
+    </div>
+    <div class="note glass" style="border-color:var(--core)"><b>Late-shift rule:</b> pre-plan a protein-forward meal for after delivery shifts so you're not improvising at 11 PM around free pizza. A shaker with a scoop of whey in the car kills most of the urge.</div>
+  </section>
+
+  <!-- PRs -->
+  <section id="panel-pr" class="panel">
+    <div id="prlist"></div>
+    <div class="note glass" style="border-color:var(--gold)"><b>Log weight × reps from your top set,</b> not warm-ups. Best entry stays pinned; history counts underneath. Exercises you add in Edit mode show up here automatically.</div>
+  </section>
+
+  <!-- LOG -->
+  <section id="panel-log" class="panel">
+    <div class="sec c-pink">Today</div>
+    <div class="card glass">
+      <div class="checkitem" id="ck-workout" role="checkbox" aria-checked="false" tabindex="0">
+        <div class="checkbox" id="ckbox-workout"></div>
+        <div class="checklabel"><div class="t" id="ck-workout-t">Workout complete</div><div class="s" id="ck-workout-s"></div></div>
+      </div>
+      <div class="checkitem" id="ck-cardio" role="checkbox" aria-checked="false" tabindex="0">
+        <div class="checkbox" id="ckbox-cardio"></div>
+        <div class="checklabel"><div class="t">Cardio complete</div><div class="s" id="ck-cardio-s"></div></div>
+      </div>
+      <div class="checkitem" id="ck-pushups" role="checkbox" aria-checked="false" tabindex="0">
+        <div class="checkbox" id="ckbox-pushups"></div>
+        <div class="checklabel"><div class="t">100 push-ups</div><div class="s">Split however you want, done by midnight</div></div>
+      </div>
+      <div class="checkitem" id="ck-water" role="checkbox" aria-checked="false" tabindex="0">
+        <div class="checkbox" id="ckbox-water"></div>
+        <div class="checklabel"><div class="t">1 gallon of water</div><div class="s">128 oz across the day</div></div>
+      </div>
+      <textarea id="logNotes" placeholder="Notes — how it felt, weights used, what got skipped…" rows="3"></textarea>
+      <div style="margin-top:12px;display:flex;justify-content:flex-end">
+        <button class="act" id="saveLogBtn">Save Today</button>
+      </div>
+      <div class="streak" id="streakLine"></div>
+    </div>
+
+    <div class="sec c-pink">Weights used today</div>
+    <div class="card glass" id="weightCard">
+      <div id="weightInputs"></div>
+      <div style="margin-top:4px;display:flex;justify-content:flex-end">
+        <button class="act" id="saveLogBtn2" style="background:linear-gradient(135deg,var(--pink),#FFC1D6)">Save Today</button>
+      </div>
+    </div>
+
+    <div class="sec c-pink">History</div>
+    <div id="loghistory"></div>
+  </section>
+
+  <!-- PROGRESS -->
+  <section id="panel-prog" class="panel">
+    <div class="sec c-violet">Weight tracker</div>
+    <div class="card glass">
+      <div style="display:flex;justify-content:space-between;align-items:baseline">
+        <div><div class="bignum" id="curW">—</div><div style="font-size:12px;color:var(--muted)">current</div></div>
+        <div style="text-align:right"><div class="bignum" style="color:var(--core)" id="lostW">0.0</div><div style="font-size:12px;color:var(--muted)">lbs lost of 15</div></div>
+      </div>
+      <div class="progressbar"><div class="fill" id="pfill"></div></div>
+      <div class="inputrow">
+        <label for="wIn">Log today's weight</label>
+        <input type="number" id="wIn" inputmode="decimal" placeholder="0.0" step="0.1">
+        <button class="act" id="logBtn">Log</button>
+      </div>
+      <svg id="chart" viewBox="0 0 340 150" preserveAspectRatio="none" aria-label="Weight trend"></svg>
+      <div id="loglist"></div>
+    </div>
+    <div class="note glass" style="border-color:var(--violet)"><b>Judge the weekly average.</b> Daily weight swings 2–4 lbs from water and sodium. ~1 lb/week down on the 7-day average means it's working.</div>
+  </section>
+
+</div>
+
+<nav class="tabs glass">
+  <div class="tabrow">
+    <button class="tabbtn t-sched active" data-p="sched"><span class="ico">🗓</span>Plan</button>
+    <button class="tabbtn t-ex" data-p="ex"><span class="ico">🏋️</span>Lifts</button>
+    <button class="tabbtn t-diet" data-p="diet"><span class="ico">🥩</span>Diet</button>
+    <button class="tabbtn t-pr" data-p="pr"><span class="ico">🏆</span>PRs</button>
+    <button class="tabbtn t-log" data-p="log"><span class="ico">✅</span>Log</button>
+    <button class="tabbtn t-prog" data-p="prog"><span class="ico">📉</span>Weight</button>
+  </div>
+</nav>
+
+<script>
+'use strict';
+
+/* ============ MUSCLE GROUPS ============ */
+const GROUPS={
+  back:{label:'Back',c:'var(--g-back)'},
+  biceps:{label:'Biceps',c:'var(--g-biceps)'},
+  chest:{label:'Chest',c:'var(--g-chest)'},
+  shoulders:{label:'Shoulders',c:'var(--g-shoulders)'},
+  triceps:{label:'Triceps',c:'var(--g-triceps)'},
+  quads:{label:'Quads',c:'var(--g-quads)'},
+  hams:{label:'Hamstrings / Glutes',c:'var(--g-hams)'},
+  calves:{label:'Calves',c:'var(--g-calves)'},
+  core:{label:'Core',c:'var(--g-core)'},
+  other:{label:'Other',c:'var(--g-other)'}
+};
+const GROUP_ORDER=['back','biceps','chest','shoulders','triceps','quads','hams','calves','core','other'];
+
+/* ============ DEFAULT PLAN (lifts: {n,rx,g}) ============ */
+const DEFAULT_PLAN=[
+ {d:'Sun',name:'Back & Biceps',tag:'Pull A',type:'lift',
+  cardio:'RUN — 2–3 mi easy-moderate, before lifting.',
+  lifts:[{n:'Weighted pull-ups or lat pulldown',rx:'4 × 5–8',g:'back'},{n:'Barbell row',rx:'3 × 8–10',g:'back'},{n:'Seated cable row',rx:'3 × 10–12',g:'back'},{n:'Barbell curl',rx:'3 × 8–12',g:'biceps'},{n:'Incline dumbbell curl',rx:'3 × 10–15',g:'biceps'}],
+  core:'Hanging leg raises 3×12 · plank 3×45s'},
+ {d:'Mon',name:'Chest, Shoulders & Triceps',tag:'Push A',type:'lift',
+  cardio:'BIKE — 20–30 min easy-moderate, before lifting.',
+  lifts:[{n:'Barbell bench press',rx:'4 × 5–8',g:'chest'},{n:'Seated dumbbell shoulder press',rx:'3 × 8–10',g:'shoulders'},{n:'Incline dumbbell press',rx:'3 × 10–12',g:'chest'},{n:'Lateral raises',rx:'3 × 12–15',g:'shoulders'},{n:'Rope pushdown',rx:'3 × 10–15',g:'triceps'}],
+  core:'Cable crunch 3×15 · side plank 3×30s each'},
+ {d:'Tue',name:'Legs — Quad Focus',tag:'Legs A',type:'legs',
+  cardio:'RUN — but lift FIRST, then 2–3 mi easy after.',
+  lifts:[{n:'Barbell back squat',rx:'4 × 5–8',g:'quads'},{n:'Leg press',rx:'3 × 8–12',g:'quads'},{n:'Walking lunges',rx:'3 × 10 each leg',g:'quads'},{n:'Leg extension',rx:'3 × 12–15',g:'quads'},{n:'Standing calf raise',rx:'4 × 10–15',g:'calves'}],
+  core:'Ab wheel or weighted crunch 3×12'},
+ {d:'Wed',name:'Back, Biceps & Rear Delts',tag:'Pull B',type:'lift',
+  cardio:'BIKE — 20–30 min before lifting.',
+  lifts:[{n:'Deadlift or rack pull',rx:'4 × 5–6',g:'back'},{n:'Chest-supported row',rx:'3 × 8–10',g:'back'},{n:'Face pulls',rx:'3 × 12–15',g:'shoulders'},{n:'Hammer curl',rx:'3 × 10–12',g:'biceps'},{n:'Preacher or cable curl',rx:'3 × 10–15',g:'biceps'}],
+  core:'Hanging knee raises 3×15 · plank 3×45s'},
+ {d:'Thu',name:'Chest, Shoulders & Triceps',tag:'Push B',type:'lift',
+  cardio:'RUN — 2–3 mi before lifting.',
+  lifts:[{n:'Incline barbell or machine press',rx:'4 × 6–8',g:'chest'},{n:'Dumbbell flat press',rx:'3 × 8–10',g:'chest'},{n:'Arnold press',rx:'3 × 8–12',g:'shoulders'},{n:'Cable lateral raise',rx:'3 × 12–15',g:'shoulders'},{n:'Overhead triceps extension',rx:'3 × 10–12',g:'triceps'},{n:'Dips',rx:'3 × max',g:'triceps'}],
+  core:'Cable crunch 3×15 · dead bug 3×10'},
+ {d:'Fri',name:'Legs — Posterior Chain',tag:'Legs B',type:'legs',
+  cardio:'BIKE — lift FIRST, then 15–20 min easy after.',
+  lifts:[{n:'Romanian deadlift',rx:'4 × 6–8',g:'hams'},{n:'Bulgarian split squat',rx:'3 × 8–10 each',g:'quads'},{n:'Lying or seated leg curl',rx:'3 × 10–12',g:'hams'},{n:'Hip thrust',rx:'3 × 8–12',g:'hams'},{n:'Seated calf raise',rx:'4 × 12–15',g:'calves'}],
+  core:'Weighted plank 3×45s · pallof press 3×12'},
+ {d:'Sat',name:'Recovery',tag:'Rest',type:'rest',
+  cardio:'Light walk 20–30 min or easy 15-min spin. Low heart rate.',
+  lifts:[],
+  core:'10–15 min stretching + hip/shoulder mobility. Foam roll quads, lats, calves.'}
+];
+
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const gcolor=g=>(GROUPS[g]||GROUPS.other).c;
+
+/* ============ STATE ============ */
+const DEFAULT_STATE={bw:null,weightLog:[],prs:{},dailyLog:[],customLifts:null};
+let STATE=JSON.parse(JSON.stringify(DEFAULT_STATE));
+let saveTimer=null;
+
+/* effective plan = defaults with customLifts overrides (array of 7 lift-arrays or null) */
+function effectivePlan(){
+  return DEFAULT_PLAN.map((p,i)=>{
+    if(STATE.customLifts&&STATE.customLifts[i])return Object.assign({},p,{lifts:STATE.customLifts[i]});
+    return p;
+  });
+}
+function ensureCustom(){
+  if(!STATE.customLifts)STATE.customLifts=DEFAULT_PLAN.map(p=>p.lifts.map(l=>Object.assign({},l)));
+}
+
+function setSync(mode,text){
+  const el=document.getElementById('syncStatus');
+  el.className='syncstatus'+(mode?' '+mode:'');
+  document.getElementById('syncText').textContent=text;
+}
+/* Storage backend: prefer Claude's window.storage (artifact runtime),
+   fall back to localStorage (works on Vercel / any host / offline). */
+const LS_KEY='dre-mays-app-state';
+const HAS_WS=(()=>{try{return !!(window.storage&&window.storage.get&&window.storage.set);}catch(e){return false;}})();
+
+async function loadState(){
+  // Try window.storage first
+  if(HAS_WS){
+    try{
+      const res=await window.storage.get('app-state',false);
+      if(res&&res.value){STATE=Object.assign({},DEFAULT_STATE,JSON.parse(res.value));setSync('ok','Synced');return;}
+    }catch(e){/* fall through to localStorage */}
+  }
+  // localStorage fallback / migration source
+  try{
+    const raw=localStorage.getItem(LS_KEY);
+    if(raw){STATE=Object.assign({},DEFAULT_STATE,JSON.parse(raw));setSync('ok','Saved on device');return;}
+  }catch(e){}
+  setSync(HAS_WS?'ok':'ok','New — nothing saved yet');
+}
+async function persist(){
+  setSync('','Saving…');
+  let ok=false;
+  const json=JSON.stringify(STATE);
+  // Always write localStorage so data survives on any host
+  try{localStorage.setItem(LS_KEY,json);ok=true;}catch(e){}
+  // Also write window.storage when available
+  if(HAS_WS){
+    try{const r=await window.storage.set('app-state',json,false);if(r)ok=true;}catch(e){}
+  }
+  setSync(ok?'ok':'err',ok?(HAS_WS?'Synced':'Saved on device'):'Save failed');
+}
+function persistDebounced(){clearTimeout(saveTimer);saveTimer=setTimeout(persist,400);}
+
+/* ============ LIQUID GLASS: enable real refraction only where supported ============ */
+if(window.CSS&&CSS.supports&&CSS.supports('backdrop-filter','url(#lgFilter)')){
+  document.documentElement.classList.add('lg-refract');
+}
+
+/* ============ TABS ============ */
+document.querySelectorAll('.tabbtn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.tabbtn').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById('panel-'+b.dataset.p).classList.add('active');
+    window.scrollTo({top:0});
+  });
+});
+
+/* ============ SCHEDULE + EDIT MODE ============ */
+const strip=document.getElementById('daystrip');
+const dayview=document.getElementById('dayview');
+let selDay=new Date().getDay();
+let editMode=false;
+
+document.getElementById('editToggle').addEventListener('click',()=>{
+  editMode=!editMode;
+  const b=document.getElementById('editToggle');
+  b.classList.toggle('on',editMode);
+  b.textContent=editMode?'✓ Done editing':'✎ Edit workouts';
+  renderDay();
+});
+
+function renderStrip(){
+  strip.innerHTML='';
+  effectivePlan().forEach((p,i)=>{
+    const c=document.createElement('button');
+    c.className='daychip glass '+(p.type==='rest'?'rest ':p.type==='legs'?'legs ':'')+(i===selDay?'sel':'');
+    c.innerHTML='<span class="d">'+p.d+'</span><span class="dot"></span>';
+    c.setAttribute('aria-label',p.d+': '+p.name);
+    c.addEventListener('click',()=>{selDay=i;renderStrip();renderDay();});
+    strip.appendChild(c);
+  });
+}
+function groupSelectHtml(id){
+  return '<select id="'+id+'">'+GROUP_ORDER.map(g=>'<option value="'+g+'">'+GROUPS[g].label+'</option>').join('')+'</select>';
+}
+function renderDay(){
+  const p=effectivePlan()[selDay];
+  const tint=p.type==='rest'?'tint-rest':p.type==='legs'?'tint-legs':'tint-lift';
+  let liftHtml='';
+  if(p.lifts.length||editMode){
+    liftHtml='<div class="block b-lift"><div class="bar"></div><div style="flex:1;min-width:0"><h4>Lift · '+esc(p.tag)+'</h4>'
+      +p.lifts.map((l,li)=>{
+        const ctrl=editMode
+          ?'<span class="exctrl">'
+            +'<button data-a="up" data-i="'+li+'" aria-label="Move up">↑</button>'
+            +'<button data-a="dn" data-i="'+li+'" aria-label="Move down">↓</button>'
+            +'<button data-a="rm" data-i="'+li+'" class="rm" aria-label="Remove">✕</button>'
+           +'</span>'
+          :'<span class="rx">'+esc(l.rx)+'</span>';
+        return '<div class="exline" style="--gline:'+gcolor(l.g)+'"><span style="min-width:0"><span class="gdot" style="background:'+gcolor(l.g)+'"></span>'+esc(l.n)+(editMode?' <span class="rx">'+esc(l.rx)+'</span>':'')+'</span>'+ctrl+'</div>';
+      }).join('')
+      +(editMode
+        ?'<div class="addform">'
+          +'<input type="text" id="addName" placeholder="Exercise name" maxlength="60">'
+          +'<div class="row2"><input type="text" class="rxin" id="addRx" placeholder="3 × 10" maxlength="20">'+groupSelectHtml('addGroup')+'</div>'
+          +'<button class="act" id="addBtn" style="width:100%">+ Add Exercise</button>'
+         +'</div>'
+        :'')
+      +'</div></div>';
+  }
+  dayview.innerHTML='<div class="card glass '+tint+'">'
+   +'<div class="sess-title">'+esc(p.name)+'</div>'
+   +'<div class="sess-sub">'+(p.type==='rest'?'Active recovery — the growth happens today':'60–90 min total · 5–10 min dynamic warm-up first')+'</div>'
+   +'<div class="block b-cardio"><div class="bar"></div><div style="flex:1"><h4>Cardio</h4><p>'+esc(p.cardio)+'</p></div></div>'
+   +liftHtml
+   +'<div class="block '+(p.type==='rest'?'b-rest':'b-core')+'"><div class="bar"></div><div style="flex:1"><h4>'+(p.type==='rest'?'Mobility':'Core · 10–15 min')+'</h4><p>'+esc(p.core)+'</p></div></div>'
+   +'</div>';
+
+  if(editMode){
+    dayview.querySelectorAll('.exctrl button').forEach(b=>{
+      b.addEventListener('click',()=>{
+        ensureCustom();
+        const arr=STATE.customLifts[selDay];
+        const i=parseInt(b.dataset.i,10);
+        if(b.dataset.a==='rm')arr.splice(i,1);
+        if(b.dataset.a==='up'&&i>0)[arr[i-1],arr[i]]=[arr[i],arr[i-1]];
+        if(b.dataset.a==='dn'&&i<arr.length-1)[arr[i+1],arr[i]]=[arr[i],arr[i+1]];
+        persistDebounced();renderDay();renderExercises();renderPrs();renderWeightInputs();
+      });
+    });
+    const addBtn=document.getElementById('addBtn');
+    if(addBtn)addBtn.addEventListener('click',()=>{
+      const n=document.getElementById('addName').value.trim();
+      const rx=document.getElementById('addRx').value.trim()||'3 × 10';
+      const g=document.getElementById('addGroup').value;
+      if(!n)return;
+      ensureCustom();
+      STATE.customLifts[selDay].push({n:n,rx:rx,g:g});
+      persistDebounced();renderDay();renderExercises();renderPrs();renderWeightInputs();
+    });
+  }
+}
+
+/* ============ EXERCISES TAB ============ */
+function renderExercises(){
+  document.getElementById('exlist').innerHTML=effectivePlan().filter(p=>p.lifts.length).map(p=>
+    '<div class="sec c-lift">'+esc(p.d)+' · '+esc(p.name)+'</div><div class="card glass">'
+    +p.lifts.map(l=>'<div class="exline" style="--gline:'+gcolor(l.g)+'"><span><span class="gdot" style="background:'+gcolor(l.g)+'"></span>'+esc(l.n)+'</span><span class="rx">'+esc(l.rx)+'</span></div>').join('')
+    +'</div>').join('');
+}
+
+/* ============ DIET ============ */
+const bwIn=document.getElementById('bw');
+function setMacros(w,skipSave){
+  if(!w||w<80||w>500)return;
+  const cal=Math.round(w*12);
+  const pro=Math.round(w);           // 1 g/lb
+  const fat=Math.round(w*0.35);      // 0.35 g/lb
+  const carb=Math.max(0,Math.round((cal-pro*4-fat*9)/4));
+  document.getElementById('mCal').textContent=cal.toLocaleString();
+  document.getElementById('mPro').textContent=pro;
+  document.getElementById('mFat').textContent=fat;
+  document.getElementById('mCarb').textContent=carb;
+  document.getElementById('mWater').textContent=Math.round(w*0.6);
+  if(!skipSave){STATE.bw=w;persistDebounced();}
+}
+document.getElementById('calcBtn').addEventListener('click',()=>setMacros(parseFloat(bwIn.value)));
+
+/* ============ PROGRESS ============ */
+function renderProg(){
+  const list=document.getElementById('loglist');
+  const log=STATE.weightLog;
+  const fill=document.getElementById('pfill');
+  if(!log.length){
+    list.innerHTML='<div class="empty">No weigh-ins yet.<br>Log your starting weight to begin.</div>';
+    document.getElementById('curW').textContent='—';
+    document.getElementById('lostW').textContent='0.0';
+    fill.style.width='0%';drawChart();return;
+  }
+  const start=log[0].w,latest=log[log.length-1].w;
+  const dropped=Math.max(0,start-latest);
+  document.getElementById('curW').textContent=latest.toFixed(1);
+  document.getElementById('lostW').textContent=dropped.toFixed(1);
+  fill.style.width=Math.min(100,dropped/15*100)+'%';
+  list.innerHTML=log.slice().reverse().map((e,ri)=>{
+    const i=log.length-1-ri;
+    return '<div class="logrow"><span class="dt">'+esc(e.d)+'</span><span class="wv">'+e.w.toFixed(1)+' lbs</span><button class="del" data-i="'+i+'" aria-label="Delete">✕</button></div>';
+  }).join('');
+  list.querySelectorAll('.del').forEach(b=>b.addEventListener('click',()=>{
+    STATE.weightLog.splice(parseInt(b.dataset.i,10),1);persistDebounced();renderProg();
+  }));
+  drawChart();
+}
+function drawChart(){
+  const svg=document.getElementById('chart');
+  const log=STATE.weightLog;
+  if(log.length<2){svg.innerHTML='';return;}
+  const ws=log.map(e=>e.w);
+  const min=Math.min(...ws)-1,max=Math.max(...ws)+1;
+  const W=340,H=150,pad=10;
+  const pts=log.map((e,i)=>[pad+i/(log.length-1)*(W-2*pad),pad+(1-(e.w-min)/(max-min))*(H-2*pad)]);
+  const path=pts.map((p,i)=>(i===0?'M':'L')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+  svg.innerHTML='<path d="'+path+'" fill="none" stroke="#3DDCFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>'
+    +pts.map(p=>'<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="3.5" fill="#5DF29A"/>').join('');
+}
+document.getElementById('logBtn').addEventListener('click',()=>{
+  const el=document.getElementById('wIn');
+  const v=parseFloat(el.value);
+  if(!v||v<80||v>500)return;
+  const n=new Date();
+  STATE.weightLog.push({d:(n.getMonth()+1)+'/'+n.getDate(),w:v});
+  persistDebounced();el.value='';el.blur();renderProg();
+});
+
+/* ============ PRs — grouped by muscle ============ */
+const exSlug=n=>n.toLowerCase().replace(/[^a-z0-9]+/g,'-');
+function allExercises(){
+  const seen=new Set(),out=[];
+  effectivePlan().forEach(p=>p.lifts.forEach(l=>{
+    if(!seen.has(l.n)){seen.add(l.n);out.push(l);}
+  }));
+  return out;
+}
+function renderPrs(){
+  const el=document.getElementById('prlist');
+  const byGroup={};
+  allExercises().forEach(l=>{
+    const g=GROUPS[l.g]?l.g:'other';
+    (byGroup[g]=byGroup[g]||[]).push(l);
+  });
+  el.innerHTML=GROUP_ORDER.filter(g=>byGroup[g]).map(g=>{
+    const head='<div class="sec" style="color:'+gcolor(g)+'">'+GROUPS[g].label+'</div>';
+    const cards=byGroup[g].map(l=>{
+      const rec=STATE.prs[l.n];
+      const hist=rec&&rec.history?rec.history:[];
+      const best=hist.length?hist.reduce((a,b)=>b.w>=a.w?b:a):null;
+      const slug=exSlug(l.n);
+      return '<div class="prcard glass" style="--gline:'+gcolor(g)+'">'
+        +'<div class="prtitle">'+esc(l.n)+'</div>'
+        +'<div class="prbest">'+(best
+          ?'<span class="w">'+best.w+' lb</span><span class="r">× '+best.r+' reps · '+esc(best.d)+'</span>'
+          :'<span class="none">No PR logged yet</span>')+'</div>'
+        +'<div class="prform">'
+          +'<input type="number" inputmode="decimal" placeholder="lbs" id="prw-'+slug+'" aria-label="Weight">'
+          +'<input type="number" inputmode="numeric" placeholder="reps" id="prr-'+slug+'" aria-label="Reps">'
+          +'<button class="prsave" data-ex="'+esc(l.n)+'">Save</button>'
+        +'</div>'
+        +(hist.length>1?'<div class="prhist">'+hist.length+' entries · last: '+hist[hist.length-1].w+' lb × '+hist[hist.length-1].r+'</div>':'')
+        +'</div>';
+    }).join('');
+    return head+cards;
+  }).join('');
+  el.querySelectorAll('.prsave').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const name=btn.dataset.ex;
+      const slug=exSlug(name);
+      const w=parseFloat(document.getElementById('prw-'+slug).value);
+      const r=parseFloat(document.getElementById('prr-'+slug).value);
+      if(!w||w<=0||!r||r<=0)return;
+      const n=new Date();
+      if(!STATE.prs[name])STATE.prs[name]={history:[]};
+      STATE.prs[name].history.push({w:w,r:r,d:(n.getMonth()+1)+'/'+n.getDate()});
+      persistDebounced();renderPrs();
+    });
+  });
+}
+
+/* ============ DAILY LOG ============ */
+const CHECK_KEYS=['workout','cardio','pushups','water'];
+function todayKey(){
+  const n=new Date();
+  return n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0')+'-'+String(n.getDate()).padStart(2,'0');
+}
+let today={key:todayKey(),workout:false,cardio:false,pushups:false,water:false,notes:'',weights:{}};
+
+function planForToday(){return effectivePlan()[new Date().getDay()];}
+function refreshChecklistLabels(){
+  const p=planForToday();
+  document.getElementById('ck-workout-t').textContent=p.type==='rest'?'Recovery complete':'Workout complete';
+  document.getElementById('ck-workout-s').textContent=p.name;
+  document.getElementById('ck-cardio-s').textContent=p.cardio.split('—')[0].trim();
+}
+function wtSlug(n){return 'wt-'+n.toLowerCase().replace(/[^a-z0-9]+/g,'-');}
+function renderWeightInputs(){
+  const el=document.getElementById('weightInputs');
+  const p=planForToday();
+  if(!today.weights)today.weights={};
+  if(!p.lifts.length){
+    el.innerHTML='<div class="empty">Recovery day — no lifts to log.</div>';
+    return;
+  }
+  el.innerHTML=p.lifts.map(l=>{
+    const val=today.weights[l.n]!=null?today.weights[l.n]:'';
+    return '<div class="wtrow"><span class="gdot" style="background:'+gcolor(l.g)+'"></span>'
+      +'<span class="wn">'+esc(l.n)+' <span style="color:var(--muted);font-size:11.5px">'+esc(l.rx)+'</span></span>'
+      +'<input type="number" inputmode="decimal" placeholder="0" id="'+wtSlug(l.n)+'" value="'+esc(val)+'">'
+      +'<span class="wu">lb</span></div>';
+  }).join('');
+}
+function collectWeights(){
+  const p=planForToday();
+  const w={};
+  p.lifts.forEach(l=>{
+    const inp=document.getElementById(wtSlug(l.n));
+    if(inp&&inp.value!==''){
+      const v=parseFloat(inp.value);
+      if(!isNaN(v)&&v>0)w[l.n]=v;
+    }
+  });
+  today.weights=w;
+}
+function paintChecks(){
+  CHECK_KEYS.forEach(k=>{
+    const on=!!today[k];
+    document.getElementById('ckbox-'+k).classList.toggle('on',on);
+    const item=document.getElementById('ck-'+k);
+    item.classList.toggle('done',on);
+    item.setAttribute('aria-checked',on?'true':'false');
+  });
+}
+function commitToday(){
+  const p=planForToday();
+  today.workoutName=p.name;
+  today.dateLabel=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric'});
+  const idx=STATE.dailyLog.findIndex(e=>e.key===today.key);
+  if(idx>-1)STATE.dailyLog[idx]=Object.assign({},today);
+  else STATE.dailyLog.push(Object.assign({},today));
+}
+function toggleCheck(k){
+  today[k]=!today[k];
+  paintChecks();commitToday();persistDebounced();renderLogHistory();
+}
+CHECK_KEYS.forEach(k=>{
+  const item=document.getElementById('ck-'+k);
+  item.addEventListener('click',()=>toggleCheck(k));
+  item.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){e.preventDefault();toggleCheck(k);}});
+});
+function saveToday(){
+  today.notes=document.getElementById('logNotes').value;
+  collectWeights();
+  commitToday();persist();renderLogHistory();
+  document.getElementById('logNotes').blur();
+}
+document.getElementById('saveLogBtn').addEventListener('click',saveToday);
+document.getElementById('saveLogBtn2').addEventListener('click',saveToday);
+
+function calcStreak(){
+  const keys=new Set(STATE.dailyLog.filter(e=>e.workout||e.cardio||e.pushups||e.water).map(e=>e.key));
+  let streak=0;
+  const d=new Date();
+  for(;;){
+    const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+    if(keys.has(k)){streak++;d.setDate(d.getDate()-1);}
+    else if(streak===0&&k===todayKey()){d.setDate(d.getDate()-1);}
+    else break;
+  }
+  return streak;
+}
+function renderLogHistory(){
+  const el=document.getElementById('loghistory');
+  const s=calcStreak();
+  document.getElementById('streakLine').textContent=s>1?('🔥 '+s+'-day streak'):'';
+  const dlog=STATE.dailyLog;
+  if(!dlog.length){el.innerHTML='<div class="empty">No days logged yet.<br>Check something off above — it saves automatically.</div>';return;}
+  const sorted=dlog.slice().sort((a,b)=>b.key.localeCompare(a.key));
+  el.innerHTML=sorted.map(e=>{
+    const badges=[['workout','Workout'],['cardio','Cardio'],['pushups','100 push-ups'],['water','1 gal water']]
+      .map(b=>'<span class="badge'+(e[b[0]]?' hit':'')+'">'+(e[b[0]]?'✓ ':'· ')+b[1]+'</span>').join('');
+    const wKeys=e.weights?Object.keys(e.weights):[];
+    const weightsHtml=wKeys.length
+      ?'<div class="badgerow">'+wKeys.map(n=>'<span class="badge hit">'+esc(n)+' · '+e.weights[n]+' lb</span>').join('')+'</div>'
+      :'';
+    return '<div class="logentry glass">'
+      +'<span class="ldate">'+esc(e.dateLabel||e.key)+'</span>'
+      +'<div class="lworkout">'+esc(e.workoutName||'')+'</div>'
+      +'<div class="badgerow">'+badges+'</div>'
+      +weightsHtml
+      +(e.notes?'<div class="lognote">'+esc(e.notes)+'</div>':'')
+      +'<button class="del-entry" data-k="'+esc(e.key)+'">Delete entry</button>'
+      +'</div>';
+  }).join('');
+  el.querySelectorAll('.del-entry').forEach(b=>b.addEventListener('click',()=>{
+    STATE.dailyLog=STATE.dailyLog.filter(e=>e.key!==b.dataset.k);
+    if(b.dataset.k===today.key){
+      today={key:todayKey(),workout:false,cardio:false,pushups:false,water:false,notes:'',weights:{}};
+      paintChecks();document.getElementById('logNotes').value='';renderWeightInputs();
+    }
+    persistDebounced();renderLogHistory();
+  }));
+}
+
+/* ============ CLOCK ============ */
+function tickClock(){
+  const n=new Date();
+  const date=n.toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+  const time=n.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});
+  document.getElementById('clock').innerHTML=esc(date)+' · <b>'+esc(time)+'</b>';
+}
+tickClock();setInterval(tickClock,15000);
+
+/* ============ SESSION TIMER ============ */
+/* survives reloads: {start: epoch ms while running | null, acc: seconds banked} */
+let timerInt=null;
+function timerState(){
+  if(!STATE.timer)STATE.timer={start:null,acc:0};
+  return STATE.timer;
+}
+function timerSeconds(){
+  const t=timerState();
+  return t.acc+(t.start?Math.floor((Date.now()-t.start)/1000):0);
+}
+function fmtTimer(s){
+  const h=Math.floor(s/3600),m=Math.floor(s%3600/60),sec=s%60;
+  return (h?String(h)+':':'')+String(m).padStart(2,'0')+':'+String(sec).padStart(2,'0');
+}
+function paintTimer(){
+  const t=timerState();
+  const disp=document.getElementById('timerDisp');
+  disp.textContent=fmtTimer(timerSeconds());
+  disp.classList.toggle('running',!!t.start);
+  const btn=document.getElementById('timerStart');
+  btn.textContent=t.start?'Pause':'Start';
+  btn.className='tbtn '+(t.start?'pause':'start');
+}
+function timerLoop(){
+  clearInterval(timerInt);
+  if(timerState().start)timerInt=setInterval(paintTimer,1000);
+}
+document.getElementById('timerStart').addEventListener('click',()=>{
+  const t=timerState();
+  if(t.start){t.acc=timerSeconds();t.start=null;}   /* pause */
+  else{t.start=Date.now();}                          /* start/resume */
+  persistDebounced();paintTimer();timerLoop();
+});
+document.getElementById('timerReset').addEventListener('click',()=>{
+  STATE.timer={start:null,acc:0};
+  persistDebounced();paintTimer();timerLoop();
+});
+
+/* ============ INIT ============ */
+(async function init(){
+  renderStrip();renderDay();renderExercises();
+  refreshChecklistLabels();paintChecks();renderWeightInputs();
+  renderPrs();renderProg();renderLogHistory();
+
+  await loadState();
+
+  if(STATE.bw){bwIn.value=STATE.bw;setMacros(STATE.bw,true);}
+  const existing=STATE.dailyLog.find(e=>e.key===today.key);
+  if(existing){
+    today=Object.assign({},existing);
+    document.getElementById('logNotes').value=today.notes||'';
+  }
+  renderStrip();renderDay();renderExercises();
+  refreshChecklistLabels();paintChecks();
+  if(!today.weights)today.weights={};
+  renderWeightInputs();
+  renderPrs();renderProg();renderLogHistory();
+  paintTimer();timerLoop();
+})();
+</script>
+</body>
+</html>
