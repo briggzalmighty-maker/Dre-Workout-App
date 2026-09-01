@@ -102,6 +102,48 @@ input,textarea,select{font-size:16px}
   background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.10) 46%,rgba(255,255,255,.02) 54%,transparent 70%);
 }
 
+/* ---------- Zodiac ---------- */
+.zgrid{display:grid;gap:12px}
+@media(min-width:560px){.zgrid{grid-template-columns:1fr 1fr}}
+.zcard{border-radius:var(--radius);padding:14px 14px 15px;border-color:color-mix(in srgb,var(--za) 34%,transparent)}
+.ztop{display:flex;align-items:center;gap:12px}
+.zglyph{font-size:36px;line-height:1;filter:drop-shadow(0 0 12px color-mix(in srgb,var(--za) 60%,transparent))}
+.zwho{display:block;font-family:'Barlow Condensed',sans-serif;font-weight:800;font-size:23px;
+  text-transform:uppercase;letter-spacing:.02em;line-height:1;
+  background:linear-gradient(90deg,var(--za),var(--zb));-webkit-background-clip:text;background-clip:text;color:transparent}
+.zsign{display:block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;color:var(--za);margin-top:3px}
+.zdate{font-size:12px;color:var(--muted);margin-top:8px}
+.zmeta{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:11px}
+.zmeta span{background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:11px;
+  padding:6px 9px;font-size:12px;color:var(--text)}
+.zmeta b{display:block;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--muted);font-weight:500;margin-bottom:2px}
+.zchips{display:flex;flex-wrap:wrap;gap:5px;margin-top:11px}
+.zchips i{font-style:normal;font-size:11px;padding:4px 9px;border-radius:999px;
+  background:color-mix(in srgb,var(--za) 15%,transparent);
+  border:1px solid color-mix(in srgb,var(--za) 32%,transparent);color:var(--text)}
+.zgym,.zwatch{margin-top:11px;font-size:13px;line-height:1.5;color:var(--text)}
+.zgym b,.zwatch b{display:block;font-family:'JetBrains Mono',monospace;font-size:9px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--za);margin-bottom:3px}
+.zwatch{color:var(--muted)}.zwatch b{color:var(--muted)}
+.zmatch{border-radius:var(--radius);padding:14px}
+.zmrow{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.zmrow span{flex:0 0 96px;font-size:12px;color:var(--muted)}
+.zmrow b{flex:0 0 26px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--text)}
+.zbar{flex:1;height:7px;border-radius:7px;background:rgba(255,255,255,.08);overflow:hidden;display:block}
+.zbar i{display:block;height:100%;border-radius:7px;background:var(--zc);
+  transform-origin:left;transform:scaleX(var(--v));animation:zfill .75s cubic-bezier(.4,0,.2,1) both}
+@keyframes zfill{from{transform:scaleX(0)}to{transform:scaleX(var(--v))}}
+.ztext{font-size:13.5px;line-height:1.6;color:var(--text);margin-top:11px}
+.ztext b{color:var(--gold)}
+.ztip{margin-top:13px;padding:11px 12px;border-radius:14px;
+  background:rgba(199,155,255,.09);border:1px solid rgba(199,155,255,.28);font-size:13px;line-height:1.55}
+.ztip b{display:block;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--violet);margin-bottom:3px}
+.zfoot{margin-top:11px;font-size:11px;color:var(--muted);font-style:italic}
+@media(prefers-reduced-motion:reduce){.zbar i{animation:none}}
+
 /* ---------- Boot screen ---------- */
 .boot{position:fixed;inset:0;z-index:999;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:18px;background:var(--bg);
@@ -207,7 +249,7 @@ nav.tabs{position:fixed;bottom:calc(10px + env(safe-area-inset-bottom));left:12p
 .tabbtn.active.t-sched{color:var(--cardio)} .tabbtn.active.t-ex{color:var(--lift)}
 .tabbtn.active.t-diet{color:var(--core)} .tabbtn.active.t-pr{color:var(--gold)}
 .tabbtn.active.t-log{color:var(--pink)} .tabbtn.active.t-prog{color:var(--violet)}
-.tabbtn.active.t-money{color:#7DF9C6}
+.tabbtn.active.t-money{color:#7DF9C6} .tabbtn.active.t-zod{color:#C79BFF}
 
 @keyframes appboot{from{opacity:0}to{opacity:1}}
 .panel{display:none;padding-top:16px;animation:fade .18s ease}
@@ -616,6 +658,52 @@ textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,2
     <div class="note glass" style="border-color:var(--violet)"><b>Judge the weekly average.</b> Daily weight swings 2–4 lbs from water and sodium. ~1 lb/week down on the 7-day average means it's working.</div>
   </section>
 
+  <section id="panel-zod" class="panel">
+    <div class="sec c-violet">Star charts</div>
+
+    <div class="zgrid">
+      <div class="zcard glass" style="--za:#C79BFF;--zb:#FF5A6E">
+        <div class="ztop"><span class="zglyph">♏</span>
+          <span><span class="zwho">Dre</span><span class="zsign">Scorpio</span></span></div>
+        <div class="zdate">Nov 21, 1991 · last degree, on the Sagittarius cusp</div>
+        <div class="zmeta">
+          <span><b>Element</b>Water</span><span><b>Mode</b>Fixed</span>
+          <span><b>Rulers</b>Mars · Pluto</span><span><b>Chinese</b>Metal Goat</span>
+        </div>
+        <div class="zchips"><i>Intense</i><i>Loyal</i><i>Strategic</i><i>Private</i><i>Magnetic</i><i>All-or-nothing</i></div>
+        <div class="zgym"><b>In the gym</b>Scorpio runs on transformation, not motivation. Heavy compounds, low reps, chasing the PR board. The risk isn't skipping sessions — it's never taking a deload. Program the rest week like it's a lift.</div>
+        <div class="zwatch"><b>Watch</b>Grudges, brooding, going scorched-earth when hurt.</div>
+      </div>
+
+      <div class="zcard glass" style="--za:#3DDCFF;--zb:#FFD166">
+        <div class="ztop"><span class="zglyph">♊</span>
+          <span><span class="zwho">Gabby</span><span class="zsign">Gemini</span></span></div>
+        <div class="zdate">June 10, 1994</div>
+        <div class="zmeta">
+          <span><b>Element</b>Air</span><span><b>Mode</b>Mutable</span>
+          <span><b>Ruler</b>Mercury</span><span><b>Chinese</b>Wood Dog</span>
+        </div>
+        <div class="zchips"><i>Curious</i><i>Quick</i><i>Social</i><i>Adaptable</i><i>Witty</i><i>Needs variety</i></div>
+        <div class="zgym"><b>In the gym</b>Boredom is the only thing that breaks a Gemini's streak. Circuits, classes, supersets, a new movement every block. Give her novelty on purpose and consistency takes care of itself.</div>
+        <div class="zwatch"><b>Watch</b>Restlessness, scattered focus, talking the plan instead of running it.</div>
+      </div>
+    </div>
+
+    <div class="sec c-gold" style="margin-top:18px">Scorpio × Gemini</div>
+    <div class="zmatch glass">
+      <div class="zmrow"><span>Chemistry</span><em class="zbar"><i style="--v:.88;--zc:#5DF29A"></i></em><b>88</b></div>
+      <div class="zmrow"><span>Communication</span><em class="zbar"><i style="--v:.62;--zc:#FFD166"></i></em><b>62</b></div>
+      <div class="zmrow"><span>Trust</span><em class="zbar"><i style="--v:.55;--zc:#FF8FB1"></i></em><b>55</b></div>
+      <div class="zmrow"><span>Long haul</span><em class="zbar"><i style="--v:.65;--zc:#3DDCFF"></i></em><b>65</b></div>
+      <p class="ztext"><b>Water meets air, fixed meets mutable.</b> On paper this is one of the trickier pairs — and the friction is always the same argument in different clothes. Scorpio wants depth, loyalty and all of it; Gemini wants space, variety and room to breathe. He reads her lightness as evasion. She reads his intensity as control.</p>
+      <p class="ztext"><b>What actually works:</b> she pulls him out of the brood before it hardens, and he gives her something worth committing to. Gemini keeps it from getting heavy; Scorpio keeps it from staying shallow.</p>
+      <p class="ztext"><b>Chinese chart says the same thing.</b> Goat and Dog is a classic push-pull too — the Goat feels everything, the Dog says it straight. Same lesson, second opinion.</p>
+      <div class="ztip"><b>Train together</b>He wants to grind heavy, she wants to move and change it up. Meet in the middle: partner circuits on Saturday, one shared PR you both chase for six weeks. He brings the structure, she keeps it from getting grim.</div>
+      <div class="zfoot">For fun — not a substitute for actually talking to each other.</div>
+    </div>
+  </section>
+
+
 </div>
 
 <nav class="tabs glass">
@@ -626,6 +714,7 @@ textarea{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,2
     <button class="tabbtn t-pr" data-p="pr"><span class="ico">🏆</span>PRs</button>
     <button class="tabbtn t-log" data-p="log"><span class="ico">✅</span>Log</button>
     <button class="tabbtn t-prog" data-p="prog"><span class="ico">📉</span>Weight</button>
+    <button class="tabbtn t-zod" data-p="zod"><span class="ico">🔮</span>Zodiac</button>
     <button class="tabbtn t-money" data-p="money"><span class="ico">💰</span>Money</button>
   </div>
 </nav>
